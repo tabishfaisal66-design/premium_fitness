@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Fitness — Supplements & Gear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { bebas: ['Bebas Neue','cursive'], barlow: ['Barlow','sans-serif'] },
+      colors: {
+        iron: { 950:'#080808', 900:'#111111', 800:'#1a1a1a', 700:'#242424', 600:'#2e2e2e' },
+        fire: { DEFAULT:'#ff3d00', light:'#ff6b35', dark:'#c62a00' },
+        gold: { DEFAULT:'#ffd700', light:'#ffe566' }
+      },
+      animation: {
+        'fade-up':    'fadeUp 0.6s ease forwards',
+        'fade-in':    'fadeIn 0.5s ease forwards',
+        'pulse-fire': 'pulseFire 2s ease-in-out infinite',
+        'ticker':     'ticker 25s linear infinite',
+      },
+      keyframes: {
+        fadeUp:    { from:{opacity:0,transform:'translateY(30px)'}, to:{opacity:1,transform:'translateY(0)'} },
+        fadeIn:    { from:{opacity:0}, to:{opacity:1} },
+        pulseFire: { '0%,100%':{boxShadow:'0 0 20px rgba(255,61,0,0.4)'}, '50%':{boxShadow:'0 0 40px rgba(255,61,0,0.8)'} },
+        ticker:    { from:{transform:'translateX(0)'}, to:{transform:'translateX(-50%)'} },
+      }
+    }
+  }
+}
+</script>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ background:#080808; color:#e5e5e5; font-family:'Barlow',sans-serif; overflow-x:hidden; }
+  ::-webkit-scrollbar{ width:6px; } ::-webkit-scrollbar-track{ background:#111; }
+  ::-webkit-scrollbar-thumb{ background:#ff3d00; border-radius:3px; }
+  .hero-bg {
+    background: radial-gradient(ellipse at 60% 40%, rgba(255,61,0,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(255,215,0,0.05) 0%, transparent 50%), #080808;
+  }
+  .btn-fire {
+    background: linear-gradient(135deg, #ff3d00, #c62a00);
+    transition: all 0.3s ease; position: relative; overflow: hidden;
+  }
+  .btn-fire::before {
+    content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+  }
+  .btn-fire:hover::before { left:100%; }
+  .btn-fire:hover { transform:scale(1.03); box-shadow:0 8px 25px rgba(255,61,0,0.5); }
+  .nav-link { position:relative; }
+  .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#ff3d00; transition:width 0.3s; }
+  .nav-link:hover::after { width:100%; }
+  .product-card {
+    background: linear-gradient(145deg, #1a1a1a, #111111);
+    border: 1px solid #2e2e2e; transition: all 0.35s ease;
+  }
+  .product-card:hover {
+    border-color: rgba(255,61,0,0.5); transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(255,61,0,0.2);
+  }
+  .product-card:hover .prod-img { transform: scale(1.06); }
+  .prod-img-box {
+    width:100%; height:176px; overflow:hidden;
+    background:linear-gradient(135deg,#1a1a1a,#0f0f0f);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .prod-img { max-height:100%; max-width:100%; object-fit:contain; padding:12px; transition:transform 0.4s ease; }
+  .prod-fallback { display:none; width:100%; height:100%; align-items:center; justify-content:center; font-size:4rem; }
+  .modal-overlay { backdrop-filter: blur(8px); }
+  .cart-badge { animation: pulseBadge 0.4s ease; }
+  @keyframes pulseBadge { 0%{transform:scale(1)} 50%{transform:scale(1.5)} 100%{transform:scale(1)} }
+  .filter-btn { transition: all 0.25s; border: 1px solid #2e2e2e; }
+  .filter-btn.active, .filter-btn:hover { border-color:#ff3d00; background:rgba(255,61,0,0.1); color:#ff3d00; }
+  .input-field {
+    background:#1a1a1a; border:1px solid #2e2e2e; color:#e5e5e5;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .input-field:focus { outline:none; border-color:#ff3d00; box-shadow:0 0 0 3px rgba(255,61,0,0.1); }
+  .star-filled { color:#ffd700; }
+  .star-empty  { color:#333; }
+  .ticker-wrap { overflow:hidden; background: linear-gradient(90deg,#ff3d00,#c62a00); }
+  .ticker-inner { display:flex; white-space:nowrap; }
+  .ticker-inner span { padding:0 3rem; font-family:'Bebas Neue'; font-size:1rem; letter-spacing:2px; }
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  #mobileMenu { transition: all 0.4s ease; max-height:0; overflow:hidden; }
+  #mobileMenu.open { max-height:400px; }
+  .toast {
+    position:fixed; bottom:24px; right:24px; z-index:9999;
+    background: linear-gradient(135deg,#1a1a1a,#242424);
+    border:1px solid #ff3d00; border-radius:10px; padding:14px 20px;
+    display:flex; align-items:center; gap:12px;
+    transform:translateX(120%); transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+    max-width:320px;
+  }
+  .toast.show { transform:translateX(0); }
+  /* Modal image zoom */
+  .modal-img-box {
+    width:100%; height:240px; overflow:hidden;
+    background:linear-gradient(135deg,#1a1a1a,#111);
+    display:flex; align-items:center; justify-content:center;
+    cursor:grab; position:relative;
+  }
+  .modal-img-box:active { cursor:grabbing; }
+  .modal-img {
+    max-height:100%; max-width:100%; object-fit:contain; padding:16px;
+    transition:transform 0.3s ease; transform-origin:center center; user-select:none;
+  }
+  .modal-img-fallback {
+    display:none; width:100%; height:100%;
+    align-items:center; justify-content:center; font-size:5rem;
+  }
+  .zoom-hint {
+    position:absolute; bottom:8px; right:10px;
+    font-size:10px; color:#555; pointer-events:none;
+  }
+</style>
+</head>
+<body class="font-barlow">
+
+<!-- NAVBAR -->
+<nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300" style="background:rgba(8,8,8,0.85);backdrop-filter:blur(16px);border-bottom:1px solid #1a1a1a;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-fire rounded flex items-center justify-center font-bebas text-lg text-white">PF</div>
+        <span class="font-bebas text-2xl tracking-widest text-white">Premium<span class="text-fire">Fitness</span></span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wider text-gray-400">
+        <a href="#products" class="nav-link hover:text-white transition-colors">Shop</a>
+        <a href="shop.html" class="nav-link hover:text-white transition-colors">Supplements</a>
+        <a href="accessories.html" class="nav-link hover:text-white transition-colors">Accessories</a>
+        <a href="#about" class="nav-link hover:text-white transition-colors">About</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <button onclick="toggleSearch()" class="text-gray-400 hover:text-white transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+        <button onclick="openCart()" class="relative text-gray-400 hover:text-white transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 7H4l1-7z"/></svg>
+          <span id="cartBadge" class="absolute -top-1 -right-1 w-5 h-5 bg-fire text-white text-xs rounded-full flex items-center justify-center font-bold hidden">0</span>
+        </button>
+        <div id="authBtns" class="flex items-center gap-1.5">
+  <button onclick="showModal('loginModal')" class="text-xs text-gray-400 hover:text-white px-2 py-1 rounded border border-gray-700">Login</button>
+  <button onclick="showModal('signupModal')" class="btn-fire text-xs text-white px-2 py-1 rounded font-semibold">Sign Up</button>
+</div>
+        <div id="userMenu" class="hidden md:flex items-center gap-3">
+          <button onclick="showProfile()" class="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors">
+            <div class="w-8 h-8 bg-fire rounded-full flex items-center justify-center font-bebas text-sm text-white" id="avatarInitial">U</div>
+            <span id="userNameNav" class="font-semibold">User</span>
+          </button>
+          <button onclick="logout()" class="text-xs text-gray-500 hover:text-fire transition-colors">Logout</button>
+        </div>
+        <button onclick="toggleMobile()" class="md:hidden text-gray-400 hover:text-white p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="searchBar" class="hidden pb-4">
+      <input id="searchInput" oninput="filterProducts()" type="text" placeholder="Search supplements, accessories..." class="input-field w-full px-4 py-2.5 rounded-lg text-sm">
+    </div>
+    <div id="mobileMenu" class="md:hidden">
+      <div class="py-4 space-y-3 text-sm font-semibold uppercase tracking-wider text-gray-400 border-t border-gray-800">
+        <a href="#products" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Shop All</a>
+        <a href="shop.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Supplements</a>
+        <a href="accessories.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Accessories</a>
+        <div class="flex gap-3 pt-2">
+          <button onclick="showModal('loginModal');toggleMobile()" class="flex-1 text-center py-2 rounded border border-gray-700 text-gray-400">Login</button>
+          <button onclick="showModal('signupModal');toggleMobile()" class="flex-1 btn-fire text-white py-2 rounded font-semibold">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap mt-16 py-2">
+  <div class="ticker-inner animate-ticker">
+    <span>FREE SHIPPING OVER RS.5000</span><span>★</span>
+    <span>WHEY PROTEIN — AUTHENTIC IMPORTED</span><span>★</span>
+    <span>NEW ARRIVALS IN STOCK</span><span>★</span>
+    <span>COD AVAILABLE ACROSS PAKISTAN</span><span>★</span>
+    <span>FREE SHIPPING OVER RS.5000</span><span>★</span>
+    <span>WHEY PROTEIN — AUTHENTIC IMPORTED</span><span>★</span>
+    <span>NEW ARRIVALS IN STOCK</span><span>★</span>
+    <span>COD AVAILABLE ACROSS PAKISTAN</span><span>★</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero-bg min-h-screen flex items-center relative overflow-hidden">
+  <div class="absolute inset-0 opacity-5" style="background-image:repeating-linear-gradient(45deg,#ff3d00 0,#ff3d00 1px,transparent 0,transparent 50%);background-size:30px 30px;"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+    <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 bg-fire/10 border border-fire/30 text-fire text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6 animate-fade-up">
+        <span class="w-2 h-2 bg-fire rounded-full animate-pulse"></span>Pakistan's #1 Gym Store
+      </div>
+      <h1 class="font-bebas text-7xl sm:text-9xl leading-none text-white mb-6 animate-fade-up" style="animation-delay:0.1s">
+        FUEL YOUR<br><span class="text-fire">PEAK</span><br>PERFORMANCE
+      </h1>
+      <p class="text-gray-400 text-lg sm:text-xl max-w-xl mb-10 animate-fade-up" style="animation-delay:0.2s">
+        Premium imported supplements & professional gym accessories. 100% authentic. Delivered across Pakistan.
+      </p>
+      <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay:0.3s">
+        <a href="#products" class="btn-fire text-white font-bold px-8 py-4 rounded-lg text-lg uppercase tracking-wider">Shop Now →</a>
+        <a href="#about" class="px-8 py-4 rounded-lg text-lg font-bold uppercase tracking-wider text-white border border-gray-700 hover:border-fire transition-colors">Learn More</a>
+      </div>
+      <div class="flex flex-wrap gap-10 mt-16 animate-fade-up" style="animation-delay:0.4s">
+        <div><div class="font-bebas text-4xl text-fire">500+</div><div class="text-gray-500 text-sm uppercase tracking-wider">Products</div></div>
+        <div><div class="font-bebas text-4xl text-fire">10K+</div><div class="text-gray-500 text-sm uppercase tracking-wider">Customers</div></div>
+        <div><div class="font-bebas text-4xl text-fire">100%</div><div class="text-gray-500 text-sm uppercase tracking-wider">Authentic</div></div>
+        <div><div class="font-bebas text-4xl text-fire">COD</div><div class="text-gray-500 text-sm uppercase tracking-wider">Available</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="hidden lg:block absolute right-16 top-1/2 -translate-y-1/2 animate-pulse-fire rounded-2xl p-8 text-center border border-fire/30" style="background:rgba(255,61,0,0.05)">
+    <div class="font-bebas text-6xl text-white">UP TO</div>
+    <div class="font-bebas text-8xl text-fire leading-none">40%</div>
+    <div class="font-bebas text-2xl text-white tracking-widest">OFF TODAY</div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+  <div class="text-center mb-12 reveal">
+    <h2 class="font-bebas text-5xl text-white tracking-wider">SHOP BY <span class="text-fire">CATEGORY</span></h2>
+    <p class="text-gray-500 mt-2">Everything you need to dominate your training</p>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+    <div onclick="filterByCategory('protein')" class="cursor-pointer rounded-2xl p-6 text-center border border-gray-800 hover:border-fire/50 transition-all hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(255,61,0,0.2)]" style="background:linear-gradient(145deg,#1a1a1a,#111)">
+      <div class="text-4xl mb-3">💪</div><div class="font-bebas text-xl text-white tracking-wider">PROTEIN</div>
+      <div class="text-gray-500 text-xs mt-1">Whey, Casein, Plant</div>
+    </div>
+    <div onclick="filterByCategory('pre-workout')" class="cursor-pointer rounded-2xl p-6 text-center border border-gray-800 hover:border-fire/50 transition-all hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(255,61,0,0.2)]" style="background:linear-gradient(145deg,#1a1a1a,#111)">
+      <div class="text-4xl mb-3">⚡</div><div class="font-bebas text-xl text-white tracking-wider">PRE-WORKOUT</div>
+      <div class="text-gray-500 text-xs mt-1">Energy & Focus</div>
+    </div>
+    <div onclick="filterByCategory('vitamins')" class="cursor-pointer rounded-2xl p-6 text-center border border-gray-800 hover:border-fire/50 transition-all hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(255,61,0,0.2)]" style="background:linear-gradient(145deg,#1a1a1a,#111)">
+      <div class="text-4xl mb-3">🧪</div><div class="font-bebas text-xl text-white tracking-wider">VITAMINS</div>
+      <div class="text-gray-500 text-xs mt-1">Health & Recovery</div>
+    </div>
+    <div onclick="filterByCategory('accessories')" class="cursor-pointer rounded-2xl p-6 text-center border border-gray-800 hover:border-fire/50 transition-all hover:-translate-y-2 hover:shadow-[0_15px_35px_rgba(255,61,0,0.2)]" style="background:linear-gradient(145deg,#1a1a1a,#111)">
+      <div class="text-4xl mb-3">🏋️</div><div class="font-bebas text-xl text-white tracking-wider">ACCESSORIES</div>
+      <div class="text-gray-500 text-xs mt-1">Gloves, Belts, Bands</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="py-20 px-4 sm:px-8 max-w-7xl mx-auto">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-10 reveal">
+    <div>
+      <h2 class="font-bebas text-5xl text-white tracking-wider">ALL <span class="text-fire">PRODUCTS</span></h2>
+      <p class="text-gray-500 mt-1" id="productCount">Showing all products</p>
+    </div>
+    <div class="flex flex-wrap gap-2" id="filterBtns">
+      <button onclick="filterByCategory('all')" class="filter-btn active px-4 py-2 rounded-full text-sm font-semibold text-gray-300 uppercase tracking-wider" data-cat="all">All</button>
+      <button onclick="filterByCategory('protein')" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 uppercase tracking-wider" data-cat="protein">Protein</button>
+      <button onclick="filterByCategory('pre-workout')" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 uppercase tracking-wider" data-cat="pre-workout">Pre-Workout</button>
+      <button onclick="filterByCategory('vitamins')" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 uppercase tracking-wider" data-cat="vitamins">Vitamins</button>
+      <button onclick="filterByCategory('accessories')" class="filter-btn px-4 py-2 rounded-full text-sm font-semibold text-gray-300 uppercase tracking-wider" data-cat="accessories">Accessories</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productsGrid"></div>
+  <p id="noProducts" class="hidden text-center text-gray-500 py-16 text-lg">No products found.</p>
+</section>
+
+<!-- TOP BRANDS -->
+<section class="py-16 overflow-hidden" style="background:#0d0d0d;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 mb-10 reveal">
+    <div class="inline-flex items-center gap-2 text-fire text-xs font-bold uppercase tracking-widest mb-2">
+      <div class="w-8 h-px bg-fire"></div> Trusted Partners
+    </div>
+    <h2 class="font-bebas text-5xl text-white tracking-wider">TOP <span class="text-fire">BRANDS</span></h2>
+    <p class="text-gray-500 mt-1 text-sm">Authentic imported supplements from the world's best brands</p>
+  </div>
+  <div style="overflow:hidden;mask-image:linear-gradient(90deg,transparent,black 10%,black 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 10%,black 90%,transparent);">
+    <div style="display:flex;gap:14px;width:max-content;padding:8px 0;animation:scrollLTR 30s linear infinite;">
+      <div class="brand-pill"><span style="font-size:1.3rem">💪</span><span class="brand-name">Optimum Nutrition</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">⚡</span><span class="brand-name">C4</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🏆</span><span class="brand-name">MuscleTech</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">👻</span><span class="brand-name">Ghost Lifestyle</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🧬</span><span class="brand-name">Dymatize</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🔥</span><span class="brand-name">BSN</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🎯</span><span class="brand-name">Blade Sport</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">💪</span><span class="brand-name">Optimum Nutrition</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">⚡</span><span class="brand-name">C4</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🏆</span><span class="brand-name">MuscleTech</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">👻</span><span class="brand-name">Ghost Lifestyle</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🧬</span><span class="brand-name">Dymatize</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🔥</span><span class="brand-name">BSN</span></div>
+      <div class="brand-pill"><span style="font-size:1.3rem">🎯</span><span class="brand-name">Blade Sport</span></div>
+    </div>
+  </div>
+</section>
+<style>
+@keyframes scrollLTR { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.brand-pill { display:flex;align-items:center;gap:10px;padding:12px 22px;border-radius:50px;border:1px solid #2a2a2a;background:linear-gradient(145deg,#1a1a1a,#141414);white-space:nowrap;transition:border-color 0.3s,transform 0.3s; }
+.brand-pill:hover { border-color:rgba(255,61,0,0.5);transform:translateY(-3px); }
+.brand-name { font-family:'Barlow',sans-serif;font-weight:700;font-size:0.88rem;color:#d1d5db;text-transform:uppercase; }
+.brand-pill:hover .brand-name { color:#ff3d00; }
+</style>
+
+<!-- ABOUT -->
+<section id="about" class="py-20" style="background:linear-gradient(180deg,#080808,#111111,#080808)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="reveal">
+        <div class="inline-flex items-center gap-2 text-fire text-xs font-bold uppercase tracking-widest mb-4">
+          <div class="w-8 h-px bg-fire"></div> About Premium Fitness 
+        </div>
+        <h2 class="font-bebas text-5xl sm:text-6xl text-white leading-tight mb-6">BUILT FOR<br><span class="text-fire">CHAMPIONS</span></h2>
+        <p class="text-gray-400 text-lg leading-relaxed mb-6">Premium Fitness is Pakistan's trusted destination for authentic imported supplements and professional gym accessories.</p>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 text-gray-300"><span class="text-fire text-xl">✓</span> 100% Authentic, Imported Products</div>
+          <div class="flex items-center gap-3 text-gray-300"><span class="text-fire text-xl">✓</span> Cash on Delivery Across Pakistan</div>
+          <div class="flex items-center gap-3 text-gray-300"><span class="text-fire text-xl">✓</span> Free Shipping on Orders over Rs.5000</div>
+          <div class="flex items-center gap-3 text-gray-300"><span class="text-fire text-xl">✓</span> Expert Nutrition Guidance</div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 reveal">
+        <div class="rounded-2xl p-6 border border-gray-800" style="background:#111"><div class="font-bebas text-5xl text-fire mb-2">5+</div><div class="text-gray-400">Years in Business</div></div>
+        <div class="rounded-2xl p-6 border border-gray-800" style="background:#111"><div class="font-bebas text-5xl text-fire mb-2">50+</div><div class="text-gray-400">Brands Available</div></div>
+        <div class="rounded-2xl p-6 border border-gray-800 col-span-2" style="background:linear-gradient(135deg,rgba(255,61,0,0.1),rgba(255,61,0,0.05));border-color:rgba(255,61,0,0.3)">
+          <div class="font-bebas text-5xl text-fire mb-2">10,000+</div>
+          <div class="text-gray-300 font-semibold">Happy Customers Across Pakistan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHATSAPP -->
+<section class="py-12" style="background:linear-gradient(90deg,#ff3d00,#c62a00)">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div>
+      <h3 class="font-bebas text-3xl text-white tracking-wider">NEED HELP CHOOSING?</h3>
+      <p class="text-red-100">Our experts are available 24/7 on WhatsApp</p>
+    </div>
+    <a href="https://wa.me/9231848584" target="_blank" class="flex items-center gap-3 bg-white text-fire font-bold px-8 py-4 rounded-xl text-lg hover:scale-105 transition-transform whitespace-nowrap">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer class="py-12 border-t border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 text-center">
+    <div class="font-bebas text-3xl text-white tracking-widest mb-2">Premium<span class="text-fire">Fitness</span></div>
+    <p class="text-gray-600 text-sm">© 2026 Premium Fitness — Pakistan's #1 Gym Supplements Store</p>
+  </div>
+</footer>
+
+<!-- CART MODAL -->
+<div id="cartModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center modal-overlay" style="background:rgba(0,0,0,0.8)">
+  <div class="w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl border border-gray-800 overflow-hidden max-h-[85vh] flex flex-col" style="background:#111">
+    <div class="flex items-center justify-between p-6 border-b border-gray-800">
+      <h3 class="font-bebas text-2xl text-white tracking-wider">YOUR CART</h3>
+      <button onclick="closeModal('cartModal')" class="text-gray-500 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+    <div class="p-6 border-t border-gray-800">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray-400 font-semibold">Total</span>
+        <span class="font-bebas text-2xl text-fire" id="cartTotal">Rs. 0</span>
+      </div>
+      <button onclick="openCheckout()" class="btn-fire w-full text-white font-bold py-4 rounded-xl text-lg uppercase tracking-wider">Proceed to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.85)">
+  <div class="w-full max-w-2xl rounded-2xl border border-gray-800 overflow-hidden max-h-[90vh] overflow-y-auto" style="background:#111">
+    <div class="relative">
+      <div class="modal-img-box" id="pModalBanner">
+        <img id="pModalImg" src="" alt="" class="modal-img"
+          onerror="this.style.display='none';document.getElementById('pModalFallback').style.display='flex'">
+        <div id="pModalFallback" class="modal-img-fallback"></div>
+        <div class="zoom-hint">Scroll to zoom • Drag to pan • Double-click to reset</div>
+      </div>
+      <button onclick="closeModal('productModal')" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-fire transition-colors">✕</button>
+      <div id="pModalBadge" class="absolute top-4 left-4 hidden"></div>
+    </div>
+    <div class="p-6">
+      <div class="flex items-start justify-between gap-4 mb-3">
+        <h3 class="font-bebas text-3xl text-white" id="pModalName"></h3>
+        <div class="text-right">
+          <div class="font-bebas text-3xl text-fire" id="pModalPrice"></div>
+          <div class="text-gray-500 line-through text-sm" id="pModalOld"></div>
+        </div>
+      </div>
+      <div id="pModalStars" class="flex gap-1 mb-3"></div>
+      <p class="text-gray-400 leading-relaxed mb-6" id="pModalDesc"></p>
+      <div id="pModalFeatures" class="space-y-2 mb-6"></div>
+      <div class="flex gap-3">
+        <button id="pModalCartBtn" class="btn-fire flex-1 text-white font-bold py-3 rounded-xl uppercase tracking-wider">Add to Cart</button>
+        <a id="pModalWA" href="#" target="_blank" class="flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-700 hover:border-green-500 text-gray-400 hover:text-green-400 transition-colors">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.85)">
+  <div class="w-full max-w-md rounded-2xl border border-gray-800 relative" style="background:#111">
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <div class="font-bebas text-4xl text-white mb-1">WELCOME <span class="text-fire">BACK</span></div>
+        <p class="text-gray-500 text-sm">Sign in to your Premium Fitness account</p>
+      </div>
+      <div class="space-y-4">
+        <input id="loginEmail" type="email" placeholder="Email Address" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <input id="loginPass" type="password" placeholder="Password" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <button onclick="login()" class="btn-fire w-full text-white font-bold py-4 rounded-xl text-base uppercase tracking-wider">Login</button>
+      </div>
+      <p class="text-center text-gray-500 text-sm mt-6">Don't have an account? <button onclick="closeModal('loginModal');showModal('signupModal')" class="text-fire hover:underline font-semibold">Sign Up</button></p>
+      <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-600 hover:text-white">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div id="signupModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.85)">
+  <div class="w-full max-w-md rounded-2xl border border-gray-800 overflow-hidden max-h-[90vh] overflow-y-auto relative" style="background:#111">
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <div class="font-bebas text-4xl text-white mb-1">CREATE <span class="text-fire">ACCOUNT</span></div>
+      </div>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <input id="signupFirst" type="text" placeholder="First Name" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+          <input id="signupLast" type="text" placeholder="Last Name" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        </div>
+        <input id="signupEmail" type="email" placeholder="Email Address" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <input id="signupPhone" type="tel" placeholder="Phone (03xxxxxxxxx)" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <input id="signupCity" type="text" placeholder="City" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <input id="signupPass" type="password" placeholder="Password" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+        <button onclick="signup()" class="btn-fire w-full text-white font-bold py-4 rounded-xl text-base uppercase tracking-wider">Create Account</button>
+      </div>
+      <p class="text-center text-gray-500 text-sm mt-6">Already have an account? <button onclick="closeModal('signupModal');showModal('loginModal')" class="text-fire hover:underline font-semibold">Login</button></p>
+      <button onclick="closeModal('signupModal')" class="absolute top-4 right-4 text-gray-600 hover:text-white">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profileModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.85)">
+  <div class="w-full max-w-lg rounded-2xl border border-gray-800 overflow-hidden max-h-[90vh] overflow-y-auto" style="background:#111">
+    <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+      <h3 class="font-bebas text-2xl text-white tracking-wider">MY ACCOUNT</h3>
+      <button onclick="closeModal('profileModal')" class="text-gray-600 hover:text-white text-xl">✕</button>
+    </div>
+    <div class="p-6">
+      <div class="flex items-center gap-4 mb-8 p-4 rounded-xl border border-gray-800" style="background:#0f0f0f">
+        <div class="w-14 h-14 bg-fire rounded-full flex items-center justify-center font-bebas text-2xl text-white" id="profileAvatar">U</div>
+        <div>
+          <div class="font-bold text-white text-lg" id="profileName">User</div>
+          <div class="text-gray-500 text-sm" id="profileEmail">—</div>
+          <div class="text-gray-500 text-sm" id="profilePhone">—</div>
+        </div>
+      </div>
+      <div class="mb-6">
+        <h4 class="font-bebas text-lg text-fire tracking-wider mb-3">PERSONAL INFORMATION</h4>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div class="p-3 rounded-lg border border-gray-800" style="background:#0f0f0f">
+            <div class="text-gray-500 text-xs uppercase tracking-wider mb-1">City</div>
+            <div class="text-white font-medium" id="profileCity">—</div>
+          </div>
+          <div class="p-3 rounded-lg border border-gray-800" style="background:#0f0f0f">
+            <div class="text-gray-500 text-xs uppercase tracking-wider mb-1">Member Since</div>
+            <div class="text-white font-medium" id="profileSince">—</div>
+          </div>
+        </div>
+      </div>
+      <h4 class="font-bebas text-lg text-fire tracking-wider mb-3">ORDER HISTORY</h4>
+      <div id="orderHistory" class="space-y-3"></div>
+      <p id="noOrders" class="text-gray-600 text-sm text-center py-4">No orders yet. Start shopping!</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.85)">
+  <div class="w-full max-w-lg rounded-2xl border border-gray-800 overflow-hidden max-h-[90vh] overflow-y-auto" style="background:#111">
+    <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+      <h3 class="font-bebas text-2xl text-white tracking-wider">CHECKOUT</h3>
+      <button onclick="closeModal('checkoutModal')" class="text-gray-600 hover:text-white text-xl">✕</button>
+    </div>
+    <div class="p-6 space-y-4">
+      <p class="text-gray-500 text-sm uppercase tracking-wider font-semibold">Delivery Information</p>
+      <input id="coName" type="text" placeholder="Full Name *" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+      <input id="coPhone" type="tel" placeholder="Phone Number *" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+      <input id="coAddress" type="text" placeholder="Full Address *" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+      <input id="coCity" type="text" placeholder="City *" class="input-field w-full px-4 py-3 rounded-xl text-sm">
+
+      <p class="text-gray-500 text-sm uppercase tracking-wider font-semibold pt-2">Payment Method</p>
+      <div class="grid grid-cols-2 gap-3">
+        <label id="lblCOD" onclick="switchPay('cod')" class="flex items-center gap-3 p-3 rounded-xl border border-fire cursor-pointer transition-all" style="background:rgba(255,61,0,.08)">
+          <input type="radio" name="payment" value="cod" checked class="accent-fire">
+          <span class="text-gray-300 text-sm font-medium">💵 Cash on Delivery</span>
+        </label>
+        <label id="lblBank" onclick="switchPay('bank')" class="flex items-center gap-3 p-3 rounded-xl border border-gray-700 cursor-pointer transition-all">
+          <input type="radio" name="payment" value="bank" class="accent-fire">
+          <span class="text-gray-300 text-sm font-medium">🏦 Bank Transfer</span>
+        </label>
+      </div>
+
+      <!-- Bank Transfer Fields -->
+      <div id="bankFields" class="hidden space-y-3 p-4 rounded-xl border border-gray-800" style="background:#0f0f0f">
+        <p class="text-xs text-yellow-400 font-bold uppercase tracking-widest">🏦 Bank Transfer Details</p>
+
+        <!-- Premium Fitness account info -->
+        <div class="p-3 rounded-xl border border-blue-800/40 bg-blue-900/10">
+          <p class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-2">📤 Transfer To (Premium Fitness)</p>
+          <div class="space-y-1 text-xs font-mono text-gray-400">
+            <div class="flex justify-between"><span class="text-gray-600">Bank:</span><span class="text-white">Meezan Bank</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Account:</span><span class="text-white">0123-4567890-01</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Title:</span><span class="text-white">Premium Fitness Pvt Ltd</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">IBAN:</span><span class="text-white">PK12MEZN0004610102243481</span></div>
+          </div>
+        </div>
+
+        <!-- User bank name -->
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">Your Bank Name *</label>
+          <input id="userBankName" type="text" placeholder="e.g. Meezan Bank, HBL, Easypaisa..." class="input-field w-full px-4 py-2.5 rounded-xl text-sm">
+        </div>
+
+        <!-- User account number -->
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">Your Account / IBAN Number *</label>
+          <input id="userBankAcc" type="text" placeholder="e.g. PK36ALFA0021000005001001" class="input-field w-full px-4 py-2.5 rounded-xl text-sm font-mono">
+        </div>
+
+        <!-- Account holder name -->
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-wider mb-1.5 block">Account Holder Name *</label>
+          <input id="userBankHolder" type="text" placeholder="Name as on bank account" class="input-field w-full px-4 py-2.5 rounded-xl text-sm">
+        </div>
+
+        <p class="text-xs text-gray-600 flex items-start gap-2">
+          <span class="text-yellow-500 mt-0.5">⚠</span>
+          After placing order, send payment screenshot on WhatsApp:
+          <span class="text-red-400 font-semibold ml-1">0300-1234567</span>
+        </p>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="p-4 rounded-xl border border-fire/30 bg-fire/5">
+        <div class="flex justify-between text-gray-400 text-sm mb-2"><span>Subtotal</span><span id="coSubtotal">Rs. 0</span></div>
+        <div class="flex justify-between text-gray-400 text-sm mb-3"><span>Shipping</span><span class="text-green-400">Free</span></div>
+        <div class="flex justify-between font-bold text-white">
+          <span class="font-bebas text-lg">TOTAL</span>
+          <span class="font-bebas text-xl text-fire" id="coTotal">Rs. 0</span>
+        </div>
+      </div>
+      <button onclick="placeOrder()" class="btn-fire w-full text-white font-bold py-4 rounded-xl text-lg uppercase tracking-wider">Place Order 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div id="successModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4" style="background:rgba(0,0,0,0.9)">
+  <div class="w-full max-w-sm rounded-2xl border border-gray-800 text-center p-8" style="background:#111">
+    <div class="text-7xl mb-4">🎉</div>
+    <h3 class="font-bebas text-4xl text-white mb-2">ORDER <span class="text-fire">PLACED!</span></h3>
+    <p class="text-gray-400 mb-2">Your order has been confirmed.</p>
+    <p class="text-gray-500 text-sm mb-6">We'll contact you within 24 hours for delivery details.</p>
+    <div class="p-3 rounded-xl bg-green-900/20 border border-green-700/40 text-green-400 text-sm font-semibold mb-4" id="orderIdDisplay"></div>
+    <div id="bankSuccessNote" class="hidden p-3 rounded-xl bg-yellow-900/20 border border-yellow-700/40 text-yellow-400 text-xs mb-4">
+      📤 Please send payment screenshot on WhatsApp: <strong>0300-1234567</strong>
+    </div>
+    <button onclick="closeModal('successModal')" class="btn-fire w-full text-white font-bold py-3 rounded-xl uppercase tracking-wider">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon" class="text-xl">✅</span>
+  <span id="toastMsg" class="text-sm text-white font-medium"></span>
+</div>
+
+<script>
+// ── PRODUCTS — apni images ka path yahan lagao ─────────────
+const PRODUCTS = [
+  { id:1, name:"ON Gold Standard Whey", cat:"protein", img:"Images/ongold.webp", price:14500, oldPrice:17000, rating:5, badge:"BESTSELLER",
+    desc:"Optimum Nutrition Gold Standard 100% Whey — world's #1 protein supplement. 24g protein per serving.",
+    features:["24g Protein Per Serving","5.5g BCAAs","2 lbs (30 servings)","Mixes Instantly","Chocolate, Vanilla, Strawberry"]},
+  { id:2, name:"Dymatize ISO100 Whey", cat:"protein", img:"Images/dymatize.jpeg", price:16800, oldPrice:19500, rating:5, badge:"NEW",
+    desc:"Hydrolyzed 100% Whey Protein Isolate. Fastest absorbing, ultra-pure protein for post-workout recovery.",
+    features:["25g Protein Per Serving","Zero Fat, Zero Sugar","Hydrolyzed for Fast Absorption","5.5g BCAAs","Fudge Brownie Flavor"]},
+  { id:3, name:"MuscleTech Nitro-Tech", cat:"protein", img:"Images/muscletech.jpeg", price:12500, oldPrice:14000, rating:4, badge:null,
+    desc:"Advanced whey protein with creatine for superior muscle building and strength gains.",
+    features:["30g Protein Per Serving","3g Creatine Added","Enhanced with Amino Acids","3 lbs Tub","Cookies & Cream Flavor"]},
+  { id:4, name:"C4 Original Pre-Workout", cat:"pre-workout", img:"Images/c4pre.jpeg", price:6500, oldPrice:8000, rating:5, badge:"HOT",
+    desc:"America's #1 pre-workout. Explosive energy, sharp focus, and incredible pumps.",
+    features:["150mg Caffeine","1.6g Beta-Alanine","CarnoSyn® Clinically Studied","30 Servings","Watermelon & Blue Razz"]},
+  { id:5, name:"Ghost Legend Pre-Workout", cat:"pre-workout", img:"Images/ghost.jpeg", price:8200, oldPrice:9500, rating:5, badge:"NEW",
+    desc:"Ghost Legend is the full disclosure, fully loaded pre-workout built for athletes.",
+    features:["250mg Caffeine","L-Citrulline 4g","Nitrosigine® Pump","25 Servings","Sour Watermelon Flavor"]},
+  { id:6, name:"Optimum Nutrition BCAA", cat:"vitamins", img:"Images/bcca.jpg", price:4800, oldPrice:5500, rating:4, badge:null,
+    desc:"Instantized BCAA powder with 5g of BCAAs in the proven 2:1:1 ratio for muscle recovery.",
+    features:["5g BCAAs Per Serving","2:1:1 Leucine Ratio","Electrolytes Added","30 Servings","Fruit Punch Flavor"]},
+  { id:7, name:"Optimum Nutrition Multivitamin", cat:"vitamins", img:"Images/multivitamin.jpeg", price:3200, oldPrice:3800, rating:4, badge:null,
+    desc:"Complete vitamin and mineral formula designed for active men and women who train hard.",
+    features:["30+ Vitamins & Minerals","Daily Health Support","Iron-Free Formula","180 Tablets","1-Month Supply"]},
+  { id:8, name:"NOW Foods Fish Oil", cat:"vitamins", img:"Images/fishoil.jpeg", price:2800, oldPrice:3200, rating:4, badge:null,
+    desc:"Molecularly distilled, high-potency fish oil providing EPA and DHA omega-3 fatty acids.",
+    features:["1000mg Fish Oil","180mg EPA / 120mg DHA","Molecularly Distilled","100 Softgels","Lemon Flavor"]},
+  { id:9, name:"Pro Lifting Gloves", cat:"accessories", img:"https://tse2.mm.bing.net/th/id/OIP.Rou_Fpnz6UNNNljpDrx8RgHaHa?pid=Api&h=220&P=0", price:1800, oldPrice:2500, rating:5, badge:"SALE",
+    desc:"Premium padded lifting gloves with wrist support. Non-slip grip, breathable mesh back.",
+    features:["Full Palm Padding","Wrist Support Strap","Anti-Slip Grip","Breathable Mesh","Sizes S/M/L/XL"]},
+  { id:10, name:"Lever Belt 10mm", cat:"accessories", img:"https://tse3.mm.bing.net/th/id/OIP.qsrhilz7-7XjiFW0aqaUkgHaE8?pid=Api&h=220&P=0", price:4500, oldPrice:5500, rating:5, badge:"BESTSELLER",
+    desc:"Competition-grade 10mm leather powerlifting belt. Lever buckle for quick on/off.",
+    features:["10mm Thick Leather","Lever Buckle System","4 Inch Width","Sizes 28\"-42\"","Squat & Deadlift Support"]},
+  { id:11, name:"Resistance Band Set", cat:"accessories", img:"https://tse3.mm.bing.net/th/id/OIP._qhxzkNbYsM2XSCXuofRagHaHa?pid=Api&h=220&P=0", price:2200, oldPrice:2800, rating:4, badge:null,
+    desc:"Set of 5 resistance bands for warm-up, mobility, glute activation, and rehabilitation.",
+    features:["5 Resistance Levels","Heavy-Duty Latex","Non-Slip Design","Travel Pouch Included","For All Fitness Levels"]},
+  { id:12, name:"Stainless Steel Shaker", cat:"accessories", img:"https://tse2.mm.bing.net/th/id/OIP.3tK5G2QTbKdSQGoNs25wcQHaHa?pid=Api&h=220&P=0", price:1500, oldPrice:2000, rating:4, badge:"SALE",
+    desc:"700ml stainless steel shaker bottle with leak-proof lid and BlenderBall wire whisk.",
+    features:["700ml Capacity","BlenderBall Whisk","Leak-Proof Lid","Double-Wall Insulated","Dishwasher Safe"]},
+];
+
+// ── STATE ──────────────────────────────────────────────────
+let cart = JSON.parse(localStorage.getItem('ip_cart') || '[]');
+let currentUser = JSON.parse(localStorage.getItem('ip_user') || 'null');
+let currentFilter = 'all';
+let currentSearch = '';
+
+// ── INIT ────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderProducts(); updateCartBadge(); updateAuthUI(); initScrollReveal(); initImgZoom();
+});
+
+function initScrollReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold:0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ── IMAGE ZOOM & DRAG ───────────────────────────────────────
+function initImgZoom() {
+  const wrap = document.getElementById('pModalBanner');
+  const img  = document.getElementById('pModalImg');
+  let scale = 1, posX = 0, posY = 0;
+  let isDragging = false, startX, startY;
+
+  function resetZoom() {
+    scale = 1; posX = 0; posY = 0;
+    img.style.transform = 'scale(1) translate(0px, 0px)';
+    wrap.style.cursor = 'grab';
+  }
+
+  // Scroll = zoom
+  wrap.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    scale += e.deltaY < 0 ? 0.15 : -0.15;
+    scale = Math.min(Math.max(scale, 1), 3.5);
+    if(scale <= 1){ posX = 0; posY = 0; }
+    img.style.transform = `scale(${scale}) translate(${posX}px, ${posY}px)`;
+    wrap.style.cursor = scale > 1 ? 'grab' : 'default';
+  }, { passive: false });
+
+  // Mouse drag to pan
+  wrap.addEventListener('mousedown', (e) => {
+    if(scale <= 1) return;
+    isDragging = true;
+    startX = e.clientX - posX * scale;
+    startY = e.clientY - posY * scale;
+    wrap.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if(!isDragging) return;
+    posX = (e.clientX - startX) / scale;
+    posY = (e.clientY - startY) / scale;
+    img.style.transform = `scale(${scale}) translate(${posX}px, ${posY}px)`;
+  });
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    wrap.style.cursor = scale > 1 ? 'grab' : 'default';
+  });
+
+  // Double click = reset
+  wrap.addEventListener('dblclick', resetZoom);
+
+  // Touch pinch zoom
+  let lastDist = 0;
+  wrap.addEventListener('touchstart', (e) => {
+    if(e.touches.length === 2)
+      lastDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  });
+  wrap.addEventListener('touchmove', (e) => {
+    if(e.touches.length === 2){
+      e.preventDefault();
+      const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      scale *= dist / lastDist;
+      scale = Math.min(Math.max(scale, 1), 3.5);
+      lastDist = dist;
+      img.style.transform = `scale(${scale}) translate(${posX}px, ${posY}px)`;
+    }
+  }, { passive: false });
+
+  // Reset on modal close
+  document.getElementById('productModal').addEventListener('click', (e) => {
+    if(e.target === document.getElementById('productModal')) resetZoom();
+  });
+}
+
+// ── RENDER PRODUCTS ─────────────────────────────────────────
+function renderProducts() {
+  let list = PRODUCTS;
+  if(currentFilter !== 'all') list = list.filter(p => p.cat === currentFilter);
+  if(currentSearch) list = list.filter(p => p.name.toLowerCase().includes(currentSearch.toLowerCase()));
+
+  const grid = document.getElementById('productsGrid');
+  const none = document.getElementById('noProducts');
+  const count = document.getElementById('productCount');
+  count.textContent = `Showing ${list.length} product${list.length!==1?'s':''}`;
+
+  if(!list.length){ grid.innerHTML=''; none.classList.remove('hidden'); return; }
+  none.classList.add('hidden');
+
+  grid.innerHTML = list.map(p => {
+    const stars = '★'.repeat(p.rating) + '☆'.repeat(5-p.rating);
+    const discount = p.oldPrice ? Math.round((1 - p.price/p.oldPrice)*100) : null;
+    return `
+    <div class="product-card rounded-2xl overflow-hidden cursor-pointer" onclick="openProduct(${p.id})">
+      <div class="prod-img-box">
+        <img class="prod-img" src="${p.img}" alt="${p.name}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="prod-fallback">📦</div>
+        ${p.badge ? `<span class="absolute top-3 left-3 px-2 py-0.5 rounded text-xs font-bold uppercase" style="background:rgba(255,61,0,0.9);color:white">${p.badge}</span>` : ''}
+        ${discount ? `<span class="absolute top-3 right-3 px-2 py-0.5 rounded text-xs font-bold" style="background:rgba(255,215,0,0.15);color:#ffd700;border:1px solid rgba(255,215,0,0.3)">-${discount}%</span>` : ''}
+      </div>
+      <div class="p-4">
+        <div class="text-xs text-fire uppercase tracking-widest font-semibold mb-1">${p.cat}</div>
+        <h3 class="font-bold text-white text-base mb-1 leading-tight">${p.name}</h3>
+        <div class="text-yellow-400 text-xs mb-3 tracking-wider">${stars}</div>
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="font-bebas text-xl text-fire">Rs. ${p.price.toLocaleString()}</span>
+            ${p.oldPrice ? `<span class="text-gray-600 line-through text-xs ml-1">Rs. ${p.oldPrice.toLocaleString()}</span>` : ''}
+          </div>
+          <button onclick="event.stopPropagation();addToCart(${p.id})" class="btn-fire text-white text-xs font-bold px-3 py-2 rounded-lg">+ Cart</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── FILTERS ──────────────────────────────────────────────────
+function filterByCategory(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderProducts();
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+function filterProducts() { currentSearch = document.getElementById('searchInput').value; renderProducts(); }
+function toggleSearch() {
+  const bar = document.getElementById('searchBar');
+  bar.classList.toggle('hidden');
+  if(!bar.classList.contains('hidden')) document.getElementById('searchInput').focus();
+}
+function toggleMobile() { document.getElementById('mobileMenu').classList.toggle('open'); }
+
+// ── PRODUCT MODAL ────────────────────────────────────────────
+function openProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  const img = document.getElementById('pModalImg');
+  const fallback = document.getElementById('pModalFallback');
+
+  // Reset zoom on new product
+  img.style.transform = 'scale(1) translate(0px, 0px)';
+  img.src = p.img;
+  img.alt = p.name;
+  img.style.display = 'block';
+  fallback.style.display = 'none';
+  fallback.textContent = '📦';
+
+  document.getElementById('pModalName').textContent = p.name;
+  document.getElementById('pModalPrice').textContent = 'Rs. ' + p.price.toLocaleString();
+  document.getElementById('pModalOld').textContent = p.oldPrice ? 'Rs. ' + p.oldPrice.toLocaleString() : '';
+  document.getElementById('pModalDesc').textContent = p.desc;
+  document.getElementById('pModalStars').innerHTML = [...'★'.repeat(p.rating)+'☆'.repeat(5-p.rating)].map(s =>
+    `<span class="${s==='★'?'star-filled':'star-empty'} text-lg">${s}</span>`).join('');
+  document.getElementById('pModalFeatures').innerHTML = p.features.map(f =>
+    `<div class="flex items-center gap-2 text-gray-400 text-sm"><span class="text-fire">→</span>${f}</div>`).join('');
+  document.getElementById('pModalCartBtn').onclick = () => { addToCart(id); closeModal('productModal'); };
+  document.getElementById('pModalWA').href = `https://wa.me/923001234567?text=I want to order: ${p.name} (Rs. ${p.price})`;
+
+  const badge = document.getElementById('pModalBadge');
+  if(p.badge){ badge.textContent=p.badge; badge.className='absolute top-4 left-4 px-3 py-1 rounded text-xs font-bold uppercase tracking-wider bg-fire text-white'; badge.classList.remove('hidden'); }
+  else badge.classList.add('hidden');
+
+  showModal('productModal');
+}
+
+// ── CART ─────────────────────────────────────────────────────
+function addToCart(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if(existing) existing.qty++;
+  else cart.push({ id, name:p.name, price:p.price, img:p.img, qty:1 });
+  saveCart(); updateCartBadge();
+  showToast('✅', `${p.name} added to cart!`);
+}
+function removeFromCart(id) { cart = cart.filter(x => x.id !== id); saveCart(); updateCartBadge(); renderCart(); }
+function updateQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if(item){ item.qty += delta; if(item.qty < 1) removeFromCart(id); }
+  saveCart(); updateCartBadge(); renderCart();
+}
+function saveCart() { localStorage.setItem('ip_cart', JSON.stringify(cart)); }
+function updateCartBadge() {
+  const total = cart.reduce((s,i) => s+i.qty, 0);
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = total;
+  badge.classList.toggle('hidden', total === 0);
+}
+function getCartTotal() { return cart.reduce((s,i) => s + i.price*i.qty, 0); }
+function openCart() { renderCart(); showModal('cartModal'); }
+function renderCart() {
+  const cont = document.getElementById('cartItems');
+  const total = document.getElementById('cartTotal');
+  if(!cart.length){
+    cont.innerHTML = `<div class="text-center py-12 text-gray-600"><div class="text-5xl mb-4">🛒</div><p class="font-semibold">Your cart is empty</p></div>`;
+    total.textContent = 'Rs. 0'; return;
+  }
+  cont.innerHTML = cart.map(i => `
+    <div class="flex items-center gap-4 p-3 rounded-xl border border-gray-800 hover:border-gray-700 transition-colors">
+      <div style="width:52px;height:52px;background:#1a1a1a;border-radius:8px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+        <img src="${i.img||''}" alt="${i.name}" style="width:100%;height:100%;object-fit:contain;padding:4px;"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:1.5rem;">📦</div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-white font-semibold text-sm leading-tight truncate">${i.name}</div>
+        <div class="text-fire text-sm font-bold">Rs. ${(i.price*i.qty).toLocaleString()}</div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="updateQty(${i.id},-1)" class="w-7 h-7 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-sm flex items-center justify-center">−</button>
+        <span class="text-white font-bold text-sm w-4 text-center">${i.qty}</span>
+        <button onclick="updateQty(${i.id},1)" class="w-7 h-7 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-sm flex items-center justify-center">+</button>
+      </div>
+      <button onclick="removeFromCart(${i.id})" class="text-gray-600 hover:text-fire transition-colors ml-1">✕</button>
+    </div>`).join('');
+  total.textContent = 'Rs. ' + getCartTotal().toLocaleString();
+}
+
+// ── PAYMENT SWITCH ───────────────────────────────────────────
+function switchPay(mode) {
+  const bankFields = document.getElementById('bankFields');
+  const lblCOD = document.getElementById('lblCOD');
+  const lblBank = document.getElementById('lblBank');
+  if(mode === 'bank') {
+    bankFields.classList.remove('hidden');
+    lblBank.style.borderColor = '#ff3d00'; lblBank.style.background = 'rgba(255,61,0,.08)';
+    lblCOD.style.borderColor = '#374151'; lblCOD.style.background = 'transparent';
+    document.querySelector('input[value="bank"]').checked = true;
+  } else {
+    bankFields.classList.add('hidden');
+    lblCOD.style.borderColor = '#ff3d00'; lblCOD.style.background = 'rgba(255,61,0,.08)';
+    lblBank.style.borderColor = '#374151'; lblBank.style.background = 'transparent';
+    document.querySelector('input[value="cod"]').checked = true;
+  }
+}
+
+// ── CHECKOUT ─────────────────────────────────────────────────
+function openCheckout() {
+  if(!cart.length){ showToast('⚠️','Your cart is empty!'); return; }
+  closeModal('cartModal');
+  // Reset payment to COD
+  switchPay('cod');
+  if(currentUser){
+    document.getElementById('coName').value = currentUser.firstName + ' ' + currentUser.lastName;
+    document.getElementById('coPhone').value = currentUser.phone || '';
+    document.getElementById('coCity').value = currentUser.city || '';
+  }
+  const t = getCartTotal();
+  document.getElementById('coSubtotal').textContent = 'Rs. ' + t.toLocaleString();
+  document.getElementById('coTotal').textContent = 'Rs. ' + t.toLocaleString();
+  showModal('checkoutModal');
+}
+
+function placeOrder() {
+  const name    = document.getElementById('coName').value.trim();
+  const phone   = document.getElementById('coPhone').value.trim();
+  const address = document.getElementById('coAddress').value.trim();
+  const city    = document.getElementById('coCity').value.trim();
+  if(!name||!phone||!address||!city){ showToast('⚠️','Please fill all delivery fields!'); return; }
+
+  const payMode = document.querySelector('input[name="payment"]:checked').value;
+  if(payMode === 'bank') {
+    const bName   = document.getElementById('userBankName').value.trim();
+    const bAcc    = document.getElementById('userBankAcc').value.trim();
+    const bHolder = document.getElementById('userBankHolder').value.trim();
+    if(!bName)  { showToast('⚠️','Please enter your bank name!'); return; }
+    if(!bAcc)   { showToast('⚠️','Please enter your account number!'); return; }
+    if(!bHolder){ showToast('⚠️','Please enter account holder name!'); return; }
+  }
+
+  const orderId = 'IP-' + Date.now().toString().slice(-6);
+  const order = {
+    id:orderId, date:new Date().toLocaleDateString('en-PK'),
+    items:[...cart], total:getCartTotal(),
+    address, city, name, phone, status:'Confirmed',
+    payment: payMode === 'bank' ? 'Bank Transfer' : 'Cash on Delivery'
+  };
+
+  if(currentUser){
+    currentUser.orders = currentUser.orders || [];
+    currentUser.orders.unshift(order);
+    localStorage.setItem('ip_user', JSON.stringify(currentUser));
+    let users = JSON.parse(localStorage.getItem('ip_users') || '[]');
+    const idx = users.findIndex(u => u.email === currentUser.email);
+    if(idx > -1) users[idx] = currentUser;
+    localStorage.setItem('ip_users', JSON.stringify(users));
+  }
+
+  cart = []; saveCart(); updateCartBadge();
+  closeModal('checkoutModal');
+  document.getElementById('orderIdDisplay').textContent = `Order ID: ${orderId} — ${order.date} | ${order.payment}`;
+  const bankNote = document.getElementById('bankSuccessNote');
+  if(payMode === 'bank') bankNote.classList.remove('hidden'); else bankNote.classList.add('hidden');
+  showModal('successModal');
+
+  // Clear bank fields
+  ['userBankName','userBankAcc','userBankHolder'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+}
+
+// ── AUTH ──────────────────────────────────────────────────────
+function signup() {
+  const first = document.getElementById('signupFirst').value.trim();
+  const last  = document.getElementById('signupLast').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const phone = document.getElementById('signupPhone').value.trim();
+  const city  = document.getElementById('signupCity').value.trim();
+  const pass  = document.getElementById('signupPass').value;
+  if(!first||!last||!email||!pass){ showToast('⚠️','Please fill all required fields!'); return; }
+  let users = JSON.parse(localStorage.getItem('ip_users') || '[]');
+  if(users.find(u => u.email === email)){ showToast('⚠️','Email already registered!'); return; }
+  const user = { firstName:first, lastName:last, email, phone, city, pass, joinDate:new Date().toLocaleDateString('en-PK'), orders:[] };
+  users.push(user); localStorage.setItem('ip_users', JSON.stringify(users));
+  loginUser(user); closeModal('signupModal');
+  showToast('🎉', `Welcome, ${first}! Account created.`);
+}
+function login() {
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const pass  = document.getElementById('loginPass').value;
+  let users = JSON.parse(localStorage.getItem('ip_users') || '[]');
+  const user = users.find(u => u.email === email && u.pass === pass);
+  if(!user){ showToast('❌','Invalid email or password!'); return; }
+  loginUser(user); closeModal('loginModal');
+  showToast('👋', `Welcome back, ${user.firstName}!`);
+}
+function loginUser(user) { currentUser = user; localStorage.setItem('ip_user', JSON.stringify(user)); updateAuthUI(); }
+function logout() { currentUser = null; localStorage.removeItem('ip_user'); updateAuthUI(); showToast('👋','Logged out.'); }
+function updateAuthUI() {
+  const ab = document.getElementById('authBtns'), um = document.getElementById('userMenu');
+  if(currentUser){
+    ab.classList.add('hidden'); um.classList.remove('hidden');
+    document.getElementById('avatarInitial').textContent = (currentUser.firstName||'U')[0].toUpperCase();
+    document.getElementById('userNameNav').textContent = currentUser.firstName;
+  } else { ab.classList.remove('hidden'); um.classList.add('hidden'); }
+}
+function showProfile() {
+  if(!currentUser) return;
+  document.getElementById('profileAvatar').textContent = (currentUser.firstName||'U')[0].toUpperCase();
+  document.getElementById('profileName').textContent = currentUser.firstName + ' ' + currentUser.lastName;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  document.getElementById('profilePhone').textContent = currentUser.phone || 'Not provided';
+  document.getElementById('profileCity').textContent = currentUser.city || 'Not provided';
+  document.getElementById('profileSince').textContent = currentUser.joinDate || '—';
+  const orders = currentUser.orders || [];
+  const hist = document.getElementById('orderHistory'), none = document.getElementById('noOrders');
+  if(orders.length){
+    none.classList.add('hidden');
+    hist.innerHTML = orders.map(o => `
+      <div class="p-4 rounded-xl border border-gray-800" style="background:#0f0f0f">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-bold text-white text-sm">${o.id}</span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-green-900/40 text-green-400 border border-green-700/40">${o.status}</span>
+        </div>
+        <div class="text-gray-500 text-xs mb-1">${o.date} — ${o.city} | ${o.payment}</div>
+        <div class="text-gray-400 text-xs mb-2">${o.items.map(i=>`${i.name} x${i.qty}`).join(', ')}</div>
+        <div class="font-bebas text-fire text-lg">Rs. ${o.total.toLocaleString()}</div>
+      </div>`).join('');
+  } else { none.classList.remove('hidden'); hist.innerHTML=''; }
+  showModal('profileModal');
+}
+
+// ── MODALS ────────────────────────────────────────────────────
+function showModal(id) { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow='hidden'; }
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.body.style.overflow=''; }
+['cartModal','productModal','loginModal','signupModal','profileModal','checkoutModal','successModal'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
+});
+
+// ── TOAST ──────────────────────────────────────────────────────
+let toastTimer;
+function showToast(icon, msg) {
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── NAVBAR SCROLL ──────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').style.background =
+    window.scrollY > 50 ? 'rgba(8,8,8,0.97)' : 'rgba(8,8,8,0.85)';
+});
+
+window.addEventListener('load', () => {
+  const stored = localStorage.getItem('ip_user');
+  if(stored){ currentUser = JSON.parse(stored); updateAuthUI(); }
+});
+</script>
+</body>
+</html>

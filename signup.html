@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Premium Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { bebas: ['Bebas Neue', 'cursive'], barlow: ['Barlow', 'sans-serif'] },
+          colors: {
+            iron: { 950: '#080808', 900: '#111111', 800: '#1a1a1a', 700: '#242424', 600: '#2e2e2e' },
+            fire: { DEFAULT: '#ff3d00', light: '#ff6b35', dark: '#c62a00' },
+            gold: { DEFAULT: '#ffd700', light: '#ffe566' }
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #080808;
+      font-family: 'Barlow', sans-serif;
+    }
+    /* Toast Slide animation */
+    #toast {
+      transform: translateX(-50%) translateY(100px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    /* Style select dropdown arrow layout natively for premium look */
+    select {
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ff3d00' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+  </style>
+</head>
+<body class="text-gray-300 min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-fire selection:text-white">
+
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-fire/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-fire/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+  <div class="flex-1 flex items-center justify-center p-4 sm:p-8 z-10">
+    <div class="w-full max-w-md bg-iron-900 border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      
+      <div class="text-center mb-8">
+        <a href="index.html" class="font-bebas text-3xl sm:text-4xl tracking-wider text-white hover:text-fire transition-colors">
+          PREMIUM <span class="text-fire">FITNESS</span>
+        </a>
+        <p class="text-xs text-gray-500 mt-2 tracking-wide uppercase">Join the Elite Fitness Community</p>
+      </div>
+
+      <form id="signupForm" onsubmit="handleSignup(event)" class="space-y-4">
+        
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supName">Full Name</label>
+          <input type="text" id="supName" placeholder="John Doe" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supEmail">Email Address</label>
+          <input type="email" id="supEmail" placeholder="name@example.com" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supPhone">Phone Number</label>
+          <input type="tel" id="supPhone" placeholder="03001234567" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supCity">City</label>
+          <select id="supCity" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-fire transition-colors cursor-pointer pr-10">
+            <option value="" disabled selected class="text-gray-600">Select your city</option>
+            <option value="Karachi">Karachi</option>
+            <option value="Lahore">Lahore</option>
+            <option value="Islamabad">Islamabad</option>
+            <option value="Faisalabad">Faisalabad</option>
+            <option value="Rawalpindi">Rawalpindi</option>
+            <option value="Gujranwala">Gujranwala</option>
+            <option value="Peshawar">Peshawar</option>
+            <option value="Multan">Multan</option>
+            <option value="Quetta">Quetta</option>
+            <option value="Sialkot">Sialkot</option>
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Sukkur">Sukkur</option>
+            <option value="Gujrat">Gujrat</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supPass">Password</label>
+          <input type="password" id="supPass" placeholder="••••••••" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="supConfirmPass">Confirm Password</label>
+          <input type="password" id="supConfirmPass" placeholder="••••••••" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div class="flex items-start gap-2.5 pt-1">
+          <input type="checkbox" id="supTerms" checked class="accent-fire mt-0.5 rounded cursor-pointer">
+          <label for="supTerms" class="text-xs text-gray-500 cursor-pointer select-none">
+            I agree to the Premium Fitness Terms of Service and Privacy Policy.
+          </label>
+        </div>
+
+        <button type="submit" 
+          class="w-full bg-fire hover:bg-fire-dark text-white font-bebas tracking-wide text-lg py-3 rounded-xl transition-all duration-300 shadow-lg shadow-fire/10 hover:shadow-fire/20 active:scale-[0.99] mt-2">
+          Create Account
+        </button>
+      </form>
+
+      <div class="text-center mt-6 pt-5 border-t border-gray-800/60 text-xs text-gray-500">
+        Already have an account? 
+        <a href="login.html" class="text-fire hover:underline font-medium ml-1 transition-colors">Login here</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="py-4 text-center text-xs text-gray-600 border-t border-gray-900 z-10">
+    © 2026 Premium Fitness. All Rights Reserved.
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-iron-900 border border-gray-800 px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 opacity-0 pointer-events-none z-50 min-w-[280px]">
+    <span id="toastIcon" class="text-lg">🚀</span>
+    <p id="toastMsg" class="text-xs font-medium text-white tracking-wide"></p>
+  </div>
+
+  <script>
+    let toastTimer;
+    function showToast(icon, msg) {
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastMsg').textContent = msg;
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // LOCALSTORAGE BASED SIGNUP HANDLER (NO BACKEND)
+    function handleSignup(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('supName')?.value.trim();
+      const email = document.getElementById('supEmail')?.value.trim();
+      const phone = document.getElementById('supPhone')?.value.trim();
+      const city = document.getElementById('supCity')?.value;
+      const password = document.getElementById('supPass')?.value;
+      const confirmPassword = document.getElementById('supConfirmPass')?.value;
+      const termsChecked = document.getElementById('supTerms')?.checked;
+
+      if (!name || !email || !password) {
+        showToast("⚠️", "Please fill all required fields.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showToast("⚠️", "Passwords do not match!");
+        return;
+      }
+
+      if (!termsChecked) {
+        showToast("⚠️", "You must agree to the Terms of Service.");
+        return;
+      }
+
+      // 1. Existing users database uthayein
+      let allUsers = JSON.parse(localStorage.getItem('ip_users_db') || '[]');
+
+      // 2. Check karein ke email pehle se registered to nahi
+      const alreadyExists = allUsers.some(u => u.email.toLowerCase() === email.toLowerCase());
+      if (alreadyExists) {
+        showToast("⚠️", "An account with this email already exists.");
+        return;
+      }
+
+      // 3. Naya user object banayein
+      const newUser = {
+        name,
+        email,
+        phone: phone || 'Not provided',
+        city: city || 'Not provided',
+        password,
+        joinDate: new Date().toLocaleDateString('en-PK'),
+        orders: []
+      };
+
+      // 4. Users database mein save karein
+      allUsers.push(newUser);
+      localStorage.setItem('ip_users_db', JSON.stringify(allUsers));
+
+      // 🚨 Auto-login nahi karte — user ko login page par bhejna hai
+      showToast("🎉", "Account created! Redirecting to login page...");
+
+      // 1.5 seconds ka break taake user notification sahi se parh sakay
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 1500);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Premium Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { bebas: ['Bebas Neue', 'cursive'], barlow: ['Barlow', 'sans-serif'] },
+          colors: {
+            iron: { 950: '#080808', 900: '#111111', 800: '#1a1a1a', 700: '#242424', 600: '#2e2e2e' },
+            fire: { DEFAULT: '#ff3d00', light: '#ff6b35', dark: '#c62a00' },
+            gold: { DEFAULT: '#ffd700', light: '#ffe566' }
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #080808;
+      font-family: 'Barlow', sans-serif;
+    }
+    /* Toast Slide animation */
+    #toast {
+      transform: translateX(-50%) translateY(100px);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="text-gray-300 min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-fire selection:text-white">
+
+  <div class="absolute top-0 right-1/4 w-96 h-96 bg-fire/10 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-fire/5 rounded-full blur-[150px] pointer-events-none"></div>
+
+  <div class="flex-1 flex items-center justify-center p-4 sm:p-8 z-10">
+    <div class="w-full max-w-md bg-iron-900 border border-gray-800/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      
+      <div class="text-center mb-8">
+        <a href="index.html" class="font-bebas text-3xl sm:text-4xl tracking-wider text-white hover:text-fire transition-colors">
+          PREMIUM <span class="text-fire">FITNESS</span>
+        </a>
+        <p class="text-xs text-gray-500 mt-2 tracking-wide uppercase">Welcome Back to the Elite Circle</p>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-5">
+        
+        <div>
+          <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5" for="logEmail">Email Address</label>
+          <input type="email" id="logEmail" placeholder="name@example.com" 
+            class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider" for="logPass">Password</label>
+            <a href="#" onclick="showToast('ℹ️', 'Password reset feature coming soon!')" class="text-xs text-gray-600 hover:text-fire transition-colors">Forgot Password?</a>
+          </div>
+          
+          <div class="relative">
+            <input type="password" id="logPass" placeholder="••••••••" 
+              class="w-full bg-iron-950 border border-gray-800 rounded-xl px-4 py-3 pr-12 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-fire transition-colors">
+            
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-fire transition-colors focus:outline-none">
+              <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              </svg>
+              <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 hidden">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2.5 pt-0.5">
+          <input type="checkbox" id="rememberMe" checked class="accent-fire rounded cursor-pointer">
+          <label for="rememberMe" class="text-xs text-gray-500 cursor-pointer select-none">
+            Keep me logged in on this device
+          </label>
+        </div>
+
+        <button type="submit" 
+          class="w-full bg-fire hover:bg-fire-dark text-white font-bebas tracking-wide text-lg py-3 rounded-xl transition-all duration-300 shadow-lg shadow-fire/10 hover:shadow-fire/20 active:scale-[0.99] mt-2">
+          Sign In
+        </button>
+      </form>
+
+      <div class="text-center mt-6 pt-5 border-t border-gray-800/60 text-xs text-gray-500">
+        Don't have an account yet? 
+        <a href="signup.html" class="text-fire hover:underline font-medium ml-1 transition-colors">Create account here</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="py-4 text-center text-xs text-gray-600 border-t border-gray-900 z-10">
+    © 2026 Premium Fitness. All Rights Reserved.
+  </footer>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-iron-900 border border-gray-800 px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 opacity-0 pointer-events-none z-50 min-w-[280px]">
+    <span id="toastIcon" class="text-lg">👋</span>
+    <p id="toastMsg" class="text-xs font-medium text-white tracking-wide"></p>
+  </div>
+
+
+  <script>
+    // TOAST SHOW FUNCTION
+    let toastTimer;
+    function showToast(icon, msg) {
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastMsg').textContent = msg;
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // PASSWORD VISIBILITY TOGGLE FUNCTION
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('logPass');
+      const eyeOpenIcon = document.getElementById('eyeOpen');
+      const eyeClosedIcon = document.getElementById('eyeClosed');
+
+      if (passwordInput.type === 'password') {
+        // Password ko text mein badlein (Show password)
+        passwordInput.type = 'text';
+        eyeOpenIcon.classList.add('hidden');
+        eyeClosedIcon.classList.remove('hidden');
+      } else {
+        // Wapas password format karein (Hide password)
+        passwordInput.type = 'password';
+        eyeOpenIcon.classList.remove('hidden');
+        eyeClosedIcon.classList.add('hidden');
+      }
+    }
+
+    // LOCALSTORAGE BASED LOGIN HANDLER (NO BACKEND)
+    function handleLogin(event) {
+      event.preventDefault(); // Form reload block karein
+
+      // Fetch Inputs
+      const email = document.getElementById('logEmail').value.trim();
+      const password = document.getElementById('logPass').value;
+
+      // 1. Basic Fields Validation
+      if (!email || !password) {
+        showToast('⚠️', 'Please enter both your email and password!');
+        return;
+      }
+
+      // 2. Registered users ki local database uthayein
+      const allUsers = JSON.parse(localStorage.getItem('ip_users_db') || '[]');
+
+      // 3. Email (case-insensitive) se user dhoondein
+      const matchedUser = allUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+      if (!matchedUser) {
+        showToast('❌', 'No account found with this email.');
+        return;
+      }
+
+      // 4. Password verify karein
+      if (matchedUser.password !== password) {
+        showToast('❌', 'Incorrect password. Please try again.');
+        return;
+      }
+
+      // 5. Login successful — session set karein
+      showToast('👋', `Welcome back, ${matchedUser.name.split(' ')[0]}!`);
+
+      localStorage.setItem('ip_user', JSON.stringify(matchedUser));
+      localStorage.setItem('ip_prof_name', matchedUser.name);
+      localStorage.setItem('ip_prof_phone', matchedUser.phone || '');
+
+      // 6. Redirect back to home page after a short delay
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1200);
+    }
+
+    // Protection Guard: If session token exists, user shouldn't see login layout
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('ip_user')) {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+
+</body>
+</html>

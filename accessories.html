@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessories — Premium Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;600;700;900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { bebas: ['Bebas Neue', 'cursive'], barlow: ['Barlow', 'sans-serif'] },
+          colors: {
+            iron: { 950: '#080808', 900: '#111111', 800: '#1a1a1a', 700: '#242424', 600: '#2e2e2e' },
+            fire: { DEFAULT: '#ff3d00', light: '#ff6b35', dark: '#c62a00' },
+            gold: { DEFAULT: '#ffd700' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: #080808;
+      color: #e5e5e5;
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #111
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ff3d00;
+      border-radius: 3px
+    }
+
+    .inp {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #e5e5e5;
+      transition: border-color .3s, box-shadow .3s
+    }
+
+    .inp:focus {
+      outline: none;
+      border-color: #ff3d00;
+      box-shadow: 0 0 0 3px rgba(255, 61, 0, .1)
+    }
+
+    .inp::placeholder {
+      color: #555
+    }
+
+    .cat-pill {
+      border: 1px solid #2a2a2a;
+      background: #1a1a1a;
+      color: #888;
+      transition: all .25s;
+      cursor: pointer;
+      user-select: none
+    }
+
+    .cat-pill:hover {
+      border-color: #ff3d00;
+      color: #ff3d00
+    }
+
+    .cat-pill.active {
+      background: rgba(255, 61, 0, .12);
+      border-color: #ff3d00;
+      color: #ff3d00
+    }
+
+    .p-card {
+      background: linear-gradient(145deg, #1a1a1a, #111);
+      border: 1px solid #232323;
+      transition: all .35s;
+      cursor: pointer
+    }
+
+    .p-card:hover {
+      border-color: rgba(255, 61, 0, .5);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(255, 61, 0, .18)
+    }
+
+    .btn-fire {
+      background: linear-gradient(135deg, #ff3d00, #c62a00);
+      transition: all .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .btn-fire::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .1), transparent);
+      transition: left .5s
+    }
+
+    .btn-fire:hover::before {
+      left: 100%
+    }
+
+    .btn-fire:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 25px rgba(255, 61, 0, .45)
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      background: #2a2a2a;
+      border-radius: 2px;
+      outline: none
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #ff3d00;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(255, 61, 0, .5)
+    }
+
+    .modal-bg {
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, .85)
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: linear-gradient(135deg, #1a1a1a, #242424);
+      border: 1px solid #ff3d00;
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateX(120%);
+      transition: transform .4s cubic-bezier(.175, .885, .32, 1.275);
+      max-width: 300px
+    }
+
+    .toast.show {
+      transform: translateX(0)
+    }
+
+    .bank-opt {
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background .2s;
+      border-bottom: 1px solid #1f1f1f;
+      font-size: .9rem;
+      color: #ccc
+    }
+
+    .bank-opt:hover,
+    .bank-opt.selected {
+      background: rgba(255, 61, 0, .1);
+      color: #ff3d00
+    }
+
+    .bank-dropdown {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      overflow: hidden;
+      max-height: 220px;
+      overflow-y: auto;
+      position: absolute;
+      z-index: 50;
+      width: 100%;
+      top: calc(100% + 4px);
+      left: 0
+    }
+
+    select {
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px !important
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .5s ease, transform .5s ease
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    #sidebar {
+      transition: transform .4s cubic-bezier(.4, 0, .2, 1)
+    }
+
+    #sidebarOverlay {
+      transition: opacity .3s
+    }
+
+    .star-on {
+      color: #ffd700
+    }
+
+    .star-off {
+      color: #2a2a2a
+    }
+
+    .badge-hot {
+      background: rgba(255, 61, 0, .9)
+    }
+
+    .badge-new {
+      background: rgba(129, 140, 248, .9)
+    }
+
+    .badge-sale {
+      background: rgba(255, 215, 0, .15);
+      color: #ffd700;
+      border: 1px solid rgba(255, 215, 0, .3)
+    }
+
+    .nav-link {
+      position: relative
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff3d00;
+      transition: width 0.3s
+    }
+
+    .nav-link:hover::after {
+      width: 100%
+    }
+
+    .prod-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 176px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a1a1a, #0f0f0f)
+    }
+
+    .prod-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+      transition: transform .4s ease
+    }
+
+    .p-card:hover .prod-img-wrap img {
+      transform: scale(1.06)
+    }
+
+    .prod-img-wrap .img-fallback {
+      display: none;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.5rem
+    }
+
+    .prod-img-wrap img.error {
+      display: none
+    }
+
+    .prod-img-wrap img.error+.img-fallback {
+      display: flex
+    }
+
+    .pm-img-wrap {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .pm-img-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      padding: 16px
+    }
+
+    .pm-img-wrap .pm-fallback {
+      font-size: 6rem;
+      display: none
+    }
+
+        .pm-img-wrap img {
+  transition: transform 0.4s ease;
+  cursor: zoom-in;
+}
+.pm-img-wrap img:hover {
+  transform: scale(2);
+}
+
+/* ── NAVBAR & UTILITIES RESPONSIVE VIEW ── */
+#mobileMenu {
+  transition: all 0.4s ease;
+  max-height: 0;
+  overflow: hidden;
+}
+
+#mobileMenu.open {
+  max-height: 400px;
+}
+
+/* Default Hidden States for Custom Classes */
+.custom-auth-btns, .custom-user-menu {
+  display: none;
+}
+.custom-hamburger, .custom-mobile-menu {
+  display: none;
+}
+
+/* Screen size larger than 473px */
+@media (min-width: 474px) {
+  .custom-auth-btns, .custom-user-menu {
+    display: flex;
+  }
+}
+
+/* Standard Mobile & Tablet View (< 768px) */
+@media (max-width: 767px) {
+  .custom-hamburger {
+    display: block !important;
+  }
+  .custom-mobile-menu {
+    display: block !important;
+  }
+}
+
+/* Critical Fix for smaller screens to hide header auth row */
+@media (max-width: 473px) {
+  .custom-auth-btns, .custom-user-menu {
+    display: none !important;
+  }
+  .custom-hamburger {
+    display: block !important;
+  }
+}
+
+  </style>
+</head>
+
+<body class="font-barlow">
+
+  <!-- NAVBAR (Same as Index with Responsive 473px fixes) -->
+   <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300"
+  style="background:rgba(8,8,8,0.85);backdrop-filter:blur(16px);border-bottom:1px solid #1a1a1a;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-fire rounded flex items-center justify-center font-bebas text-lg text-white">PF</div>
+        <span class="font-bebas text-2xl tracking-widest text-white">Premium<span class="text-fire">Fitness</span></span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-8 text-sm font-semibold uppercase tracking-wider text-gray-400">
+        <a href="index.html" class="nav-link hover:text-white transition-colors">Home</a>
+        <a href="shop.html" class="nav-link hover:text-white transition-colors">Supplements</a>
+        <a href="accessories.html" class="nav-link hover:text-white transition-colors">Accessories</a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="toggleSearch()" class="text-gray-400 hover:text-white transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+
+        <button onclick="openCart()" class="relative text-gray-400 hover:text-white transition-colors p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 7H4l1-7z" />
+          </svg>
+          <span id="cartBadge" class="absolute -top-1 -right-1 w-5 h-5 bg-fire text-white text-xs rounded-full flex items-center justify-center font-bold hidden">0</span>
+        </button>
+        
+        <button onclick="toggleMobile()" class="custom-hamburger text-gray-400 hover:text-white p-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="searchBar" class="hidden pb-4">
+      <input id="searchInput" oninput="applyFiltersFromNav()" type="text" placeholder="Search supplements, accessories..." class="input-field w-full px-4 py-2.5 rounded-lg text-sm">
+    </div>
+    
+    <div id="mobileMenu" class="custom-mobile-menu">
+      <div class="py-4 space-y-3 text-sm font-semibold uppercase tracking-wider text-gray-400 border-t border-gray-800">
+        <a href="index.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Home</a>
+        <a href="shop.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Supplements</a>
+        <a href="accessories.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Accessories</a>
+        <div class="flex gap-3 pt-2">
+          <button onclick="showModal('loginModal');toggleMobile()" class="flex-1 text-center py-2 rounded border border-gray-700 text-gray-400">Login</button>
+          <button onclick="showModal('signupModal');toggleMobile()" class="flex-1 btn-fire text-white py-2 rounded font-semibold">Sign Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <div class="pt-16" style="background:linear-gradient(180deg,#0f0f0f,#080808)">
+    <div class="max-w-7xl mx-auto px-4 py-10">
+      <div class="flex items-center gap-2 text-xs text-gray-600 uppercase tracking-widest mb-3">
+        <a href="index.html" class="hover:text-red-500 transition-colors">Home</a>
+        <span>/</span><span class="text-red-500">Accessories</span>
+      </div>
+      <h1 class="font-bebas text-6xl sm:text-7xl text-white tracking-wider">GYM <span
+          class="text-red-500">ACCESSORIES</span></h1>
+      <p class="text-gray-500 mt-1">Premium belts, straps, gloves & bottles — Engineered for heavy lifts</p>
+    </div>
+  </div>
+
+  <div class="md:hidden sticky top-16 z-30 px-4 py-3 flex gap-3"
+    style="background:#080808;border-bottom:1px solid #1a1a1a">
+    <button onclick="openSidebar()"
+      class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-gray-700 text-gray-300 text-sm font-semibold hover:border-red-500 hover:text-red-500 transition-colors">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+      </svg>
+      Filters
+    </button>
+    <select id="sortMob" onchange="applySort(this.value)" class="inp flex-1 px-3 py-2.5 rounded-xl text-sm">
+      <option value="default">Sort: Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+      <option value="name">Name A–Z</option>
+    </select>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 py-8 flex gap-8">
+
+    <aside class="hidden md:block w-64 flex-shrink-0">
+      <div class="sticky top-24 space-y-6">
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Search</label>
+          <div class="relative">
+            <input id="searchDesk" oninput="applyFilters()" type="text" placeholder="Search accessories…"
+              class="inp w-full pl-9 pr-4 py-2.5 rounded-xl text-sm">
+            <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-600" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 block">Category</label>
+          <div class="space-y-2" id="catList">
+            <div onclick="setCat('all')" data-cat="all"
+              class="cat-pill active flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🛒</span> All Accessories
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-all">0</span>
+            </div>
+            <div onclick="setCat('belts')" data-cat="belts"
+              class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🏋️‍♂️</span> Gym Belts
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-belts">0</span>
+            </div>
+            <div onclick="setCat('straps')" data-cat="straps"
+              class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🎗️</span> Straps & Wraps
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-straps">0</span>
+            </div>
+            <div onclick="setCat('gloves')" data-cat="gloves"
+              class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🧤</span> Gym Gloves
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-gloves">0</span>
+            </div>
+            <div onclick="setCat('bottles')" data-cat="bottles"
+              class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🍼</span> Shakers & Bottles
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-bottles">0</span>
+            </div>
+
+            <div onclick="setCat('other')" data-cat="other"
+              class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+              <span>🍼</span> Other's
+              <span class="ml-auto text-xs bg-gray-800 px-2 py-0.5 rounded-full" id="cnt-other">0</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 block">Price Range</label>
+          <div class="space-y-3">
+            <div class="flex justify-between text-sm font-semibold">
+              <span class="text-red-500" id="priceMinLabel">Rs. 0</span>
+              <span class="text-red-500" id="priceMaxLabel">Rs. 20,000</span>
+            </div>
+            <div class="space-y-2">
+              <input type="range" id="priceMin" min="0" max="20000" value="0" step="500" oninput="updatePrice()">
+              <input type="range" id="priceMax" min="0" max="20000" value="20000" step="500" oninput="updatePrice()">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <input id="priceMinInp" type="number" placeholder="Min" class="inp px-3 py-2 rounded-lg text-xs w-full"
+                oninput="syncRangeFromInput()">
+              <input id="priceMaxInp" type="number" placeholder="Max" class="inp px-3 py-2 rounded-lg text-xs w-full"
+                oninput="syncRangeFromInput()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 block">Min Rating</label>
+          <div class="space-y-1.5" id="ratingFilters">
+            <div onclick="setRating(0)" data-r="0"
+              class="cat-pill active flex items-center gap-2 px-4 py-2 rounded-xl text-sm cursor-pointer">
+              <span class="text-yellow-400">★★★★★</span><span class="text-gray-500 text-xs">All</span>
+            </div>
+            <div onclick="setRating(4)" data-r="4"
+              class="cat-pill flex items-center gap-2 px-4 py-2 rounded-xl text-sm cursor-pointer">
+              <span class="text-yellow-400">★★★★</span><span class="star-off text-xs">★</span><span
+                class="text-gray-500 text-xs">& up</span>
+            </div>
+            <div onclick="setRating(3)" data-r="3"
+              class="cat-pill flex items-center gap-2 px-4 py-2 rounded-xl text-sm cursor-pointer">
+              <span class="text-yellow-400">★★★</span><span class="star-off text-xs">★★</span><span
+                class="text-gray-500 text-xs">& up</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Sort By</label>
+          <select id="sortDesk" onchange="applySort(this.value)" class="inp w-full px-3 py-2.5 rounded-xl text-sm">
+            <option value="default">Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+        <button onclick="clearFilters()"
+          class="w-full py-2.5 rounded-xl border border-gray-700 text-gray-400 text-sm font-semibold hover:border-red-500 hover:text-red-500 transition-colors">
+          ✕ Clear All Filters
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 min-w-0">
+      <div class="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <p class="text-gray-400 text-sm" id="resultCount">Loading…</p>
+        <select id="sortDesk2" onchange="applySort(this.value)"
+          class="inp hidden md:block px-3 py-2 rounded-xl text-sm">
+          <option value="default">Sort: Default</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+      <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="noResults" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🔍</div>
+        <p class="text-gray-500 text-lg font-semibold">No accessories found</p>
+        <p class="text-gray-700 text-sm mt-1">Try different filters</p>
+        <button onclick="clearFilters()" class="mt-4 text-red-500 text-sm underline">Clear filters</button>
+      </div>
+    </main>
+  </div>
+
+  <div id="sidebarOverlay" onclick="closeSidebar()" class="hidden fixed inset-0 bg-black/70 z-40 opacity-0"></div>
+  <div id="sidebar" class="fixed top-0 left-0 h-full w-80 z-50 overflow-y-auto transform -translate-x-full"
+    style="background:#0f0f0f;border-right:1px solid #1f1f1f">
+    <div class="flex items-center justify-between p-5 border-b border-gray-800">
+      <span class="font-bebas text-xl text-white tracking-wider">FILTERS</span>
+      <button onclick="closeSidebar()" class="text-gray-500 hover:text-white text-xl">✕</button>
+    </div>
+    <div class="p-5 space-y-6">
+      <div>
+        <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-2 block">Search</label>
+        <input id="searchMob" oninput="applyFilters()" type="text" placeholder="Search…"
+          class="inp w-full px-4 py-2.5 rounded-xl text-sm">
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 block">Category</label>
+        <div class="space-y-2" id="catListMob">
+          <div onclick="setCat('all');closeSidebar()" data-cat="all"
+            class="cat-pill active flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold">
+            <span>🛒</span>All Accessories</div>
+          <div onclick="setCat('belts');closeSidebar()" data-cat="belts"
+            class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold"><span>🏋️‍♂️</span>Gym
+            Belts</div>
+          <div onclick="setCat('straps');closeSidebar()" data-cat="straps"
+            class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold"><span>🎗️</span>Straps
+            & Wraps</div>
+          <div onclick="setCat('gloves');closeSidebar()" data-cat="gloves"
+            class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold"><span>🧤</span>Gym
+            Gloves</div>
+          <div onclick="setCat('bottles');closeSidebar()" data-cat="bottles"
+            class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold"><span>🍼</span>Shakers
+            & Bottles</div>
+          <div onclick="setCat('other');closeSidebar()" data-cat="Other"
+            class="cat-pill flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold"><span>🍼</span>Others
+          </div>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs text-gray-500 uppercase tracking-widest font-bold mb-3 block">Price Range</label>
+        <div class="flex justify-between text-sm font-semibold mb-2">
+          <span class="text-red-500" id="priceMinLabelM">Rs. 0</span>
+          <span class="text-red-500" id="priceMaxLabelM">Rs. 20,000</span>
+        </div>
+        <input type="range" id="priceMinM" min="0" max="20000" value="0" step="500" oninput="updatePriceMob()">
+        <input type="range" id="priceMaxM" min="0" max="20000" value="20000" step="500" oninput="updatePriceMob()"
+          class="mt-2">
+      </div>
+      <button onclick="clearFilters();closeSidebar()"
+        class="w-full py-2.5 rounded-xl border border-gray-700 text-gray-400 text-sm font-semibold">✕ Clear
+        Filters</button>
+    </div>
+  </div>
+
+  <div id="productModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-bg">
+    <div class="w-full max-w-2xl rounded-2xl border border-gray-800 overflow-hidden max-h-[92vh] overflow-y-auto"
+      style="background:#111">
+      <div class="relative">
+        <div class="pm-img-wrap" id="pmImgWrap">
+          <img id="pmImg" src="" alt=""
+            onerror="this.style.display='none';document.getElementById('pmFallback').style.display='block'">
+          <div id="pmFallback" class="pm-fallback" style="display:none"></div>
+        </div>
+        <button onclick="closeM('productModal')"
+          class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-red-600 transition-colors">✕</button>
+        <div id="pmBadge"
+          class="absolute top-3 left-3 hidden px-2 py-0.5 rounded text-xs font-bold text-white uppercase"></div>
+      </div>
+      <div class="p-6">
+        <div class="flex justify-between items-start gap-4 mb-2">
+          <h2 class="font-bebas text-3xl text-white" id="pmName"></h2>
+          <div class="text-right">
+            <div class="font-bebas text-3xl text-red-500" id="pmPrice"></div>
+            <div class="text-gray-600 line-through text-sm" id="pmOld"></div>
+          </div>
+        </div>
+        <div id="pmStars" class="flex gap-0.5 mb-1"></div>
+        <div class="text-xs text-red-500 uppercase tracking-widest font-bold mb-4" id="pmCat"></div>
+        <p class="text-gray-400 leading-relaxed mb-5" id="pmDesc"></p>
+        <div id="pmFeats" class="space-y-2 mb-6"></div>
+        <div class="flex gap-3">
+          <button id="pmCartBtn"
+            class="btn-fire flex-1 text-white font-bold py-3 rounded-xl uppercase tracking-wider text-sm">Add to Cart
+            🛒</button>
+          <a id="pmWA" href="#" target="_blank"
+            class="px-4 py-3 rounded-xl border border-gray-700 hover:border-green-500 text-gray-500 hover:text-green-400 transition-colors flex items-center gap-2 text-sm">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- 3. CART MODAL -->
+<div id="cartModal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center modal-overlay" style="background:rgba(0,0,0,0.8)">
+  <div class="w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl border border-gray-800 overflow-hidden max-h-[85vh] flex flex-col" style="background:#111">
+    <div class="flex items-center justify-between p-6 border-b border-gray-800">
+      <h3 class="font-bebas text-2xl text-white tracking-wider">YOUR CART</h3>
+      <button onclick="closeM('cartModal')" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+    </div>
+    <div id="cartItems" class="p-6 overflow-y-auto flex-1 space-y-4 max-h-[45vh]">
+      <!-- Dynamic products go here -->
+    </div>
+    <div class="p-6 border-t border-gray-800 bg-iron-950 space-y-4">
+      <div class="flex justify-between font-semibold text-lg text-white">
+        <span>Total:</span>
+        <span id="cartTotal">Rs. 0</span>
+      </div>
+      <button onclick="openCheckout()" class="btn-fire w-full py-3.5 rounded-xl font-bold text-white uppercase tracking-wider text-sm">Proceed to Checkout</button>
+    </div>
+  </div>
+</div>
+
+<!-- 4. CHECKOUT MODAL -->
+<div id="checkoutModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-bg" style="background:rgba(0,0,0,0.8)">
+  <div class="w-full max-w-lg rounded-2xl border border-gray-800 overflow-hidden max-h-[92vh] overflow-y-auto" style="background:#111">
+    <div class="flex items-center justify-between p-5 border-b border-gray-800">
+      <h3 class="font-bebas text-2xl text-white tracking-wider">CHECKOUT</h3>
+      <button onclick="closeM('checkoutModal')" class="text-gray-600 hover:text-white text-xl">✕</button>
+    </div>
+    <div class="p-5 space-y-4">
+      <p class="text-xs text-gray-500 uppercase tracking-widest font-bold">Delivery Info</p>
+      <input id="coName" type="text" placeholder="Full Name *" class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+      <input id="coPhone" type="tel" placeholder="Phone Number *" class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+      <input id="coAddress" type="text" placeholder="Full Address *" class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+      <input id="coCity" type="text" placeholder="City *" class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+      
+      <p class="text-xs text-gray-500 uppercase tracking-widest font-bold pt-2">Payment Method</p>
+      <div class="grid grid-cols-2 gap-3">
+        <label id="lblCOD" class="flex items-center gap-3 p-3.5 rounded-xl border border-red-600 cursor-pointer transition-all" style="background:rgba(255,61,0,.08)">
+          <input type="radio" name="pay" value="cod" checked onchange="switchPayment('cod')" class="accent-red-500">
+          <div>
+            <div class="text-white text-sm font-bold">💵 Cash on Delivery</div>
+            <div class="text-gray-500 text-xs">Pay when delivered</div>
+          </div>
+        </label>
+        <label id="lblBank" class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-700 cursor-pointer transition-all hover:border-gray-500">
+          <input type="radio" name="pay" value="bank" onchange="switchPayment('bank')" class="accent-red-500">
+          <div>
+            <div class="text-white text-sm font-bold">🏦 Bank Transfer</div>
+            <div class="text-gray-500 text-xs">Online payment</div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Live Filter Bank Section -->
+      <div id="bankSection" class="hidden space-y-4 p-4 rounded-xl border border-gray-800" style="background:#0f0f0f">
+        <p class="text-xs text-yellow-400 uppercase tracking-widest font-bold flex items-center gap-2"><span>🏦</span> Bank Transfer Details</p>
+        
+        <div class="relative">
+          <label class="text-xs text-gray-400 uppercase tracking-wider mb-1.5 block font-semibold">Your Bank Name *</label>
+       <input id="bankSearch" type="text" placeholder="Type to search..." autocomplete="off" 
+       oninput="filterBanks()" 
+       onfocus="showBankDrop()" 
+       class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+          <div id="bankDropdown" class="hidden absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-zinc-900 border border-gray-800 rounded-xl z-50 shadow-2xl"></div>
+        </div>
+
+        <div>
+          <label class="text-xs text-gray-400 uppercase tracking-wider mb-1.5 block font-semibold">Your Bank Account Number / IBAN *</label>
+          <input id="bankAccNum" type="text" placeholder="Enter Account No. or IBAN" class="inp w-full px-4 py-3 rounded-xl text-sm font-mono tracking-wider bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+        </div>
+
+        <div>
+          <label class="text-xs text-gray-400 uppercase tracking-wider mb-1.5 block font-semibold">Account Holder Name *</label>
+          <input id="bankAccName" type="text" placeholder="Name as on account" class="inp w-full px-4 py-3 rounded-xl text-sm bg-zinc-900 border border-gray-800 text-white focus:outline-none">
+        </div>
+
+        <div class="p-3 rounded-xl border border-blue-800/50 bg-blue-900/10">
+          <p class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-2">📤 Transfer To (Premium Fitness Account)</p>
+          <div class="space-y-1 text-xs text-gray-400 font-mono">
+            <div class="flex justify-between"><span>Bank:</span><span class="text-white">Meezan Bank</span></div>
+            <div class="flex justify-between"><span>Account:</span><span class="text-white">0123-4567890-01</span></div>
+            <div class="flex justify-between"><span>Title:</span><span class="text-white">Premium Fitness Pvt Ltd</span></div>
+            <div class="flex justify-between"><span>IBAN:</span><span class="text-white">PK12MEZN0004610102243481</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price Breakdown -->
+      <div class="p-4 rounded-xl border border-red-900/40 bg-red-950/20">
+        <div class="flex justify-between text-gray-400 text-sm mb-1"><span>Subtotal</span><span id="coSub">Rs. 0</span></div>
+        <div class="flex justify-between text-gray-400 text-sm mb-3"><span>Shipping</span><span class="text-green-400 font-semibold">Free</span></div>
+        <div class="flex justify-between font-bold">
+          <span class="font-bebas text-lg text-white">TOTAL</span>
+          <span class="font-bebas text-xl text-red-500" id="coTotal">Rs. 0</span>
+        </div>
+      </div>
+      <button onclick="placeOrder()" class="btn-fire w-full text-white font-bold py-4 rounded-xl text-lg uppercase tracking-wider">Place Order 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- 5. SUCCESS MODAL (Exact Same To Same) -->
+<div id="successModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-bg" style="background:rgba(0,0,0,0.8)">
+  <div class="w-full max-w-sm rounded-2xl border border-gray-800 text-center p-8" style="background:#111">
+    <div class="text-7xl mb-4">🎉</div>
+    <h3 class="font-bebas text-4xl text-white mb-2">ORDER <span class="text-red-500">PLACED!</span></h3>
+    <p class="text-gray-400 mb-2">We'll contact you within 24 hours.</p>
+    <div id="ordIdBox" class="p-3 rounded-xl border border-green-700/40 bg-green-900/20 text-green-400 text-sm font-semibold mb-4"></div>
+    <div id="bankReminder" class="hidden p-3 rounded-xl border border-yellow-700/40 bg-yellow-900/10 text-yellow-400 text-xs mb-4">
+      📤 Please send payment screenshot on WhatsApp: <strong>0300-1234567</strong>
+    </div>
+    <button onclick="closeM('successModal'); clearCartAfterOrder();" class="btn-fire w-full text-white font-bold py-3 rounded-xl uppercase tracking-wider">Continue Shopping</button>
+  </div>
+</div>
+
+  <div id="toast" class="toast">
+    <span id="toastIcon" class="text-xl"></span>
+    <span id="toastMsg" class="text-white text-sm font-medium"></span>
+  </div>
+
+
+  <footer class="py-12 border-t border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-8 text-center">
+    <div class="font-bebas text-3xl text-white tracking-widest mb-2">Premium<span class="text-fire">Fitness</span></div>
+    <p class="text-gray-600 text-sm">© 2026 Premium Fitness — Pakistan's #1 Gym Supplements Store</p>
+  </div>
+</footer>
+ <script>
+    // Premium Gym Accessories Array
+    const PRODUCTS = [
+      {
+        id: "acc-01",
+        name: "Premium Fitness Leather Lifting Belt (10mm)",
+        cat: "belts",
+        price: 4500,
+        oldPrice: 6000,
+        rating: 5,
+        img: "https://tse3.mm.bing.net/th/id/OIP.qsrhilz7-7XjiFW0aqaUkgHaE8?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Heavy-duty 10mm genuine leather belt with dual-prong steel buckle. Built for maximum lumbar support during heavy squats and deadlifts.",
+        feats: ["10mm Top-Grain Leather", "Dual Prong Stainless Buckle", "Reinforced Double Stitching"]
+      },
+      {
+        id: "acc-02",
+        name: "Premium Neoprene Weightlifting Belts",
+        cat: "belts",
+        price: 2800,
+        oldPrice: 3500,
+        rating: 4,
+        img: "https://tse2.mm.bing.net/th/id/OIP.rO9fAeBlbncmADqpINihTwHaHa?pid=Api&h=220&P=0",
+        badge: "sale",
+        desc: "Lightweight and contoured neoprene gym belt with a secure hook-and-loop closure mechanism for quick transitions.",
+        feats: ["Ergonomic Contoured Shape", "Heavy Duty Velcro Closure", "Breathable Mesh Padding"]
+      },
+      {
+        id: "acc-03",
+        name: "Heavy Duty Figure-8 Lifting Straps",
+        cat: "straps",
+        price: 1200,
+        oldPrice: 1800,
+        rating: 5,
+        img: "https://tse4.mm.bing.net/th/id/OIP.I8VNkQfMukOXpng0BYxsBgHaHa?pid=Api&h=220&P=0",
+        badge: "new",
+        desc: "Designed to lock your grip onto the bar completely so you can focus 100% on execution. Thick cotton webbing with extra padding.",
+        feats: ["Figure-8 Infinite Design", "Thick Cotton Webbing", "Neoprene Wrist Cushioning"]
+      },
+      {
+        id: "acc-04",
+        name: "Elite Elastic Wrist Wraps (18 Inch)",
+        cat: "straps",
+        price: 1500,
+        oldPrice: 2200,
+        rating: 4,
+        img: "https://tse2.mm.bing.net/th/id/OIP.pLIuYiXc_u50GRCZeoEpOgHaKH?pid=Api&h=220&P=0",
+        badge: "",
+        desc: "Competition grade elastic wrist support designed to stabilize wrists under extreme heavy loads like bench press and overhead lifts.",
+        feats: ["18-Inch High-Stretch Elastic", "Heavy Duty Thumb Loop", "Extra Wide Velcro Tab"]
+      },
+      {
+        id: "acc-05",
+        name: "Alpha Grips Leather Gym Gloves",
+        cat: "gloves",
+        price: 2400,
+        oldPrice: 3200,
+        rating: 4,
+        img: "https://tse2.mm.bing.net/th/id/OIP.Rou_Fpnz6UNNNljpDrx8RgHaHa?pid=Api&h=220&P=0",
+        badge: "",
+        desc: "Full genuine leather palm padding with integrated wrist wraps for ultimate grip control, callus prevention, and joint support.",
+        feats: ["Genuine Leather Palms", "Integrated Wrist Support", "Half-Finger Open Breathability"]
+      },
+      {
+        id: "acc-06",
+        name: "Stainless Steel Insulated Shaker Bottle (750ml)",
+        cat: "bottles",
+        price: 3200,
+        oldPrice: 4000,
+        rating: 5,
+        img: "https://tse2.mm.bing.net/th/id/OIP.3tK5G2QTbKdSQGoNs25wcQHaHa?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Double-wall vacuum insulated stainless steel shaker. Keeps your pre-workout ice cold up to 24 hours without any odor buildup.",
+        feats: ["Vacuum Insulated Stainless Steel", "Leak-Proof Flip Cap", "Odor Resistant Design"]
+      },
+      {
+        id: "acc-07",
+        name: "Shaker Bottle",
+        cat: "bottles",
+        price: 2000,
+        oldPrice: 4000,
+        rating: 5,
+        img: "https://tse4.mm.bing.net/th/id/OIP.XnyVuC6ijz-6G65aXWQ5iwHaHa?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Double-wall vacuum insulated stainless steel shaker. Keeps your pre-workout ice cold up to 24 hours without any odor buildup.",
+        feats: ["Vacuum Insulated Stainless Steel", "Leak-Proof Flip Cap", "Odor Resistant Design"]
+      },
+      {
+        id: "acc-08",
+        name: "IronPeak Knee Support Sleeves (Pair)",
+        cat: "other",
+        price: 2200,
+        oldPrice: 3000,
+        rating: 5,
+        img: "https://tse2.mm.bing.net/th/id/OIP.nitBc3YTyHuG07Nt7eLnpAHaHa?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Compression knee sleeves designed for heavy squats, leg press, and running support. Keeps joints warm and reduces injury risk.",
+        feats: ["4-Way Compression Fit", "Anti-Slip Design", "Breathable Neoprene Material"]
+      },
+      {
+        id: "acc-9",
+        name: "Heavy Duty Resistance Bands Set",
+        cat: "other",
+        price: 3500,
+        oldPrice: 5000,
+        rating: 5,
+        img: "https://tse3.mm.bing.net/th/id/OIP._qhxzkNbYsM2XSCXuofRagHaHa?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Multi-level resistance bands set for warm-up, stretching, strength training, and home workouts.",
+        feats: ["5 Resistance Levels", "Latex Heavy Duty Material", "Door Anchor Included"]
+      },
+      {
+        id: "acc-10",
+        name: "IronPeak Foam Roller (Deep Tissue)",
+        cat: "other",
+        price: 1800,
+        oldPrice: 2500,
+        rating: 4,
+        img: "https://tse2.mm.bing.net/th/id/OIP.7Bzk0r7WTmrXooy9BKaLkgHaHa?pid=Api&h=220&P=0",
+        badge: "",
+        desc: "High-density foam roller for muscle recovery, pain relief, and flexibility improvement after workouts.",
+        feats: ["High Density EVA Foam", "Deep Muscle Massage", "Lightweight & Portable"]
+      },
+      {
+        id: "acc-11",
+        name: "Adjustable Ab Roller Wheel",
+        cat: "other",
+        price: 1600,
+        oldPrice: 2200,
+        rating: 5,
+        img: "https://tse3.mm.bing.net/th/id/OIP.pJnXhUGTWZo8iN_Tzo25CwHaHa?pid=Api&h=220&P=0",
+        badge: "new",
+        desc: "Core strengthening ab roller with extra stability wheels for beginners and advanced users.",
+        feats: ["Dual Wheel Stability", "Anti-Slip Handles", "Knee Support Pad Included"]
+      },
+      {
+        id: "acc-12",
+        name: "IronPeak Gym Backpack (Multi Compartment)",
+        cat: "other",
+        price: 4200,
+        oldPrice: 5500,
+        rating: 5,
+        img: "https://tse4.mm.bing.net/th/id/OIP.x1TRmQSFizl79jERIxrNSgHaHm?pid=Api&h=220&P=0",
+        badge: "hot",
+        desc: "Premium gym backpack with shoe compartment, shaker holder, and waterproof design for daily gym use.",
+        feats: ["Water Resistant Fabric", "Shoe Separate Section", "Laptop + Gym Storage"]
+      },
+      {
+        id: "acc-13",
+        name: "Speed Jump Rope (Steel Cable)",
+        cat: "other",
+        price: 900,
+        oldPrice: 1500,
+        rating: 4,
+        img: "https://tse3.mm.bing.net/th/id/OIP.2YOXX9ADCqs5DCTxksEOHgHaHa?pid=Api&h=220&P=0",
+        badge: "sale",
+        desc: "Professional speed rope for fat loss, boxing training, and cardio endurance.",
+        feats: ["Steel Bearing System", "Adjustable Length", "Anti-Slip Handles"]
+      }
+    ];
+
+    // Global State Variables
+    let cart = [];
+    let currentUser = JSON.parse(localStorage.getItem('ip_user') || 'null');
+    let curCat = 'all';
+    let curRating = 0;
+    let curSort = 'default';
+
+    // Backend Bank Data Configuration 
+ // Backend Bank Data Configuration (Icons Removed & All Major Pakistani Banks Added)
+    const PACK_BANKS = [
+      { id: "meezan", name: "Meezan Bank", info: "Premium Fitness Primary Business Account" },
+      { id: "hbl", name: "Habib Bank Limited (HBL)", info: "Instant verification available" },
+      { id: "alfalah", name: "Bank Alfalah", info: "Processing takes up to 30 mins" },
+      { id: "mcb", name: "MCB Bank Limited", info: "Fast clearing via online banking" },
+      { id: "allied", name: "Allied Bank Limited (ABL)", info: "Instant processing available" },
+      { id: "uabl", name: "United Bank Limited (UBL)", info: "Standard transfer verification" },
+      { id: "bop", name: "The Bank of Punjab (BOP)", info: "Processing takes up to 30 mins" },
+      { id: "askari", name: "Askari Bank", info: "Secure payment verification" },
+      { id: "faysal", name: "Faysal Bank", info: "Fast Islamic banking transfer" },
+      { id: "habibmetro", name: "Habib Metropolitan Bank", info: "Standard verification" },
+      { id: "bankislami", name: "BankIslami Pakistan", info: "Instant transfer check" },
+      { id: "dubaiislamic", name: "Dubai Islamic Bank (DIB)", info: "Processing takes up to 20 mins" },
+      { id: "summit", name: "Summit Bank", info: "Standard online transfer" },
+      { id: "js", name: "JS Bank", info: "Quick transfer confirmation" },
+      { id: "samba", name: "Samba Bank", info: "Standard processing" },
+      { id: "silk", name: "SilkBank", info: "Fast online verification" },
+      { id: "scb", name: "Standard Chartered Bank (SCB)", info: "Premium global transfer confirmation" },
+      { id: "albaraka", name: "Al Baraka Bank", info: "Standard Islamic banking transfer" },
+      { id: "soneri", name: "Soneri Bank", info: "Quick payment confirmation" },
+      { id: "ztbl", name: "Zarai Taraqiati Bank (ZTBL)", info: "Standard official processing" },
+      { id: "easypaisa", name: "Easypaisa", info: "Send to Easypaisa Wallet Account" },
+      { id: "jazzcash", name: "JazzCash", info: "Instant mobile wallet confirmation" },
+      { id: "nayapay", name: "NayaPay", info: "Fastest wallet confirmation" },
+      { id: "sadapay", name: "SadaPay", info: "Instant zero-fee transfer check" }
+    ];
+    let selectedBank = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCart();
+      
+      updatePriceLabels(0, 20000);
+      calcCatCounts();
+      renderProducts();
+      initReveal();
+    });
+
+    function calcCatCounts() {
+      document.getElementById('cnt-all').textContent = PRODUCTS.length;
+      ['belts', 'straps', 'gloves', 'bottles', 'other'].forEach(c => {
+        const el = document.getElementById(`cnt-${c}`);
+        if (el) el.textContent = PRODUCTS.filter(p => p.cat === c).length;
+      });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const noRes = document.getElementById('noResults');
+
+      const sD = document.getElementById('searchDesk').value.toLowerCase();
+      const sM = document.getElementById('searchMob').value.toLowerCase();
+      const query = sD || sM;
+
+      const pMin = parseFloat(document.getElementById('priceMin').value);
+      const pMax = parseFloat(document.getElementById('priceMax').value);
+
+      let filtered = PRODUCTS.filter(p => {
+        if (curCat !== 'all' && p.cat !== curCat) return false;
+        if (query && !p.name.toLowerCase().includes(query) && !p.desc.toLowerCase().includes(query)) return false;
+        if (p.price < pMin || p.price > pMax) return false;
+        if (curRating > 0 && p.rating < curRating) return false;
+        return true;
+      });
+
+      if (curSort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+      else if (curSort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+      else if (curSort === 'rating') filtered.sort((a, b) => b.rating - a.rating);
+      else if (curSort === 'name') filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+      grid.innerHTML = '';
+      if (filtered.length === 0) {
+        noRes.classList.remove('hidden');
+        document.getElementById('resultCount').textContent = 'Showing 0 accessories';
+        return;
+      }
+      noRes.classList.add('hidden');
+      document.getElementById('resultCount').textContent = `Showing ${filtered.length} premium accessories`;
+
+      filtered.forEach((p, idx) => {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) stars += i <= p.rating ? '<span class="text-yellow-400">★</span>' : '<span class="text-gray-700">★</span>';
+
+        let badgeHtml = '';
+        if (p.badge === 'hot') badgeHtml = `<span class="absolute top-3 left-3 badge-hot text-[10px] text-white font-bold px-2 py-0.5 rounded tracking-wider uppercase z-10">HOT</span>`;
+        else if (p.badge === 'new') badgeHtml = `<span class="absolute top-3 left-3 badge-new text-[10px] text-white font-bold px-2 py-0.5 rounded tracking-wider uppercase z-10">NEW</span>`;
+        else if (p.badge === 'sale') badgeHtml = `<span class="absolute top-3 left-3 badge-sale text-[10px] font-bold px-2 py-0.5 rounded tracking-wider uppercase z-10">SALE</span>`;
+
+        const card = document.createElement('div');
+        card.className = `p-card rounded-2xl overflow-hidden relative reveal`;
+        card.setAttribute('onclick', `openProductModal('${p.id}')`);
+        card.innerHTML = `
+          ${badgeHtml}
+          <div class="prod-img-wrap">
+            <img src="${p.img}" alt="${p.name}" onerror="this.classList.add('error')">
+            <div class="img-fallback">🏋️‍♂️</div>
+          </div>
+          <div class="p-5">
+            <div class="text-[10px] text-red-500 uppercase tracking-widest font-bold mb-1">${p.cat}</div>
+            <h3 class="text-white font-bold text-sm tracking-wide line-clamp-1 hover:text-red-500 transition-colors">${p.name}</h3>
+            <div class="flex items-center gap-1.5 mt-1.5 mb-3">${stars}</div>
+            <div class="flex items-baseline justify-between mt-2">
+              <div class="flex items-baseline gap-2">
+                <span class="font-bebas text-2xl text-red-500">Rs. ${p.price.toLocaleString()}</span>
+                <span class="text-xs text-gray-600 line-through">Rs. ${p.oldPrice.toLocaleString()}</span>
+              </div>
+              <button onclick="event.stopPropagation(); addToCart('${p.id}')" class="w-8 h-8 rounded-full bg-gray-800 text-white flex items-center justify-center hover:bg-red-500 transition-colors text-sm font-bold">+</button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+        setTimeout(() => card.classList.add('visible'), idx * 40);
+      });
+    }
+
+    function setCat(c) {
+      curCat = c;
+      document.querySelectorAll('#catList [data-cat], #catListMob [data-cat]').forEach(el => {
+        el.getAttribute('data-cat') === c ? el.classList.add('active') : el.classList.remove('active');
+      });
+      renderProducts();
+    }
+
+    function setRating(r) {
+      curRating = r;
+      document.querySelectorAll('#ratingFilters [data-r]').forEach(el => {
+        parseInt(el.getAttribute('data-r')) === r ? el.classList.add('active') : el.classList.remove('active');
+      });
+      renderProducts();
+    }
+
+    function applySort(val) {
+      curSort = val;
+      document.getElementById('sortDesk').value = val;
+      document.getElementById('sortMob').value = val;
+      document.getElementById('sortDesk2').value = val;
+      renderProducts();
+    }
+
+    function updatePrice() {
+      let min = parseInt(document.getElementById('priceMin').value);
+      let max = parseInt(document.getElementById('priceMax').value);
+      if (min > max) { let t = min; min = max; max = t; }
+      document.getElementById('priceMinInp').value = min;
+      document.getElementById('priceMaxInp').value = max;
+      updatePriceLabels(min, max);
+      renderProducts();
+    }
+
+    function syncRangeFromInput() {
+      let min = parseInt(document.getElementById('priceMinInp').value) || 0;
+      let max = parseInt(document.getElementById('priceMaxInp').value) || 20000;
+      document.getElementById('priceMin').value = min;
+      document.getElementById('priceMax').value = max;
+      updatePriceLabels(min, max);
+      renderProducts();
+    }
+
+    function updatePriceLabels(min, max) {
+      const pMinL = document.getElementById('priceMinLabel');
+      const pMaxL = document.getElementById('priceMaxLabel');
+      const pMinLM = document.getElementById('priceMinLabelM');
+      const pMaxLM = document.getElementById('priceMaxLabelM');
+      if(pMinL) pMinL.textContent = `Rs. ${min.toLocaleString()}`;
+      if(pMaxL) pMaxL.textContent = `Rs. ${max.toLocaleString()}`;
+      if(pMinLM) pMinLM.textContent = `Rs. ${min.toLocaleString()}`;
+      if(pMaxLM) pMaxLM.textContent = `Rs. ${max.toLocaleString()}`;
+    }
+
+    function clearFilters() {
+      document.getElementById('searchDesk').value = '';
+      document.getElementById('searchMob').value = '';
+      document.getElementById('priceMin').value = 0;
+      document.getElementById('priceMax').value = 20000;
+      document.getElementById('priceMinInp').value = '';
+      document.getElementById('priceMaxInp').value = '';
+      curCat = 'all';
+      curRating = 0;
+      curSort = 'default';
+      setCat('all');
+      setRating(0);
+      applySort('default');
+      updatePriceLabels(0, 20000);
+      renderProducts();
+      toast('🔍', 'All filters restored');
+    }
+
+    // MODAL SYSTEMS
+    function showM(id) { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    function closeM(id) { document.getElementById(id).classList.add('hidden'); document.body.style.overflow = ''; }
+
+    function openProductModal(id) {
+      const p = PRODUCTS.find(prod => prod.id === id);
+      if (!p) return;
+      document.getElementById('pmName').textContent = p.name;
+      document.getElementById('pmCat').textContent = p.cat;
+      document.getElementById('pmPrice').textContent = `Rs. ${p.price.toLocaleString()}`;
+      document.getElementById('pmOld').textContent = `Rs. ${p.oldPrice.toLocaleString()}`;
+      document.getElementById('pmDesc').textContent = p.desc;
+      
+      const pmImg = document.getElementById('pmImg');
+      const pmFallback = document.getElementById('pmFallback');
+      pmImg.onload = function () { this.style.display = 'block'; pmFallback.style.display = 'none'; };
+      pmImg.onerror = function () { this.style.display = 'none'; pmFallback.style.display = 'flex'; pmFallback.textContent = '🏋️‍♂️'; };
+      pmImg.style.display = 'block';
+      pmFallback.style.display = 'none';
+      pmImg.src = p.img;
+
+      let b = document.getElementById('pmBadge');
+      if (p.badge) { b.className = `absolute top-3 left-3 px-2 py-0.5 rounded text-xs font-bold text-white uppercase badge-${p.badge}`; b.textContent = p.badge; b.classList.remove('hidden'); }
+      else { b.classList.add('hidden'); }
+
+      let stars = '';
+      for (let i = 1; i <= 5; i++) stars += i <= p.rating ? '<span class="text-yellow-400 text-sm">★</span>' : '<span class="text-gray-700 text-sm">★</span>';
+      document.getElementById('pmStars').innerHTML = stars;
+
+      let fHtml = '';
+      p.feats.forEach(f => fHtml += `<div class="flex items-center gap-2 text-xs text-gray-400"> <span class="text-red-500">✔</span> ${f} </div>`);
+      document.getElementById('pmFeats').innerHTML = fHtml;
+
+      document.getElementById('pmCartBtn').setAttribute('onclick', `addToCart('${p.id}');closeM('productModal')`);
+
+      const msg = encodeURIComponent(`Hi Premium Fitness! I am interested in purchasing: ${p.name} (Rs. ${p.price})`);
+      document.getElementById('pmWA').href = `https://wa.me/923001234567?text=${msg}`;
+
+      showM('productModal');
+    }
+
+    // CART BUSINESS
+    function addToCart(id) {
+      const p = PRODUCTS.find(prod => prod.id === id);
+      const exist = cart.find(item => item.id === id);
+      if (exist) { exist.qty++; } else { cart.push({ id: p.id, name: p.name, price: p.price, img: p.img, qty: 1 }); }
+      saveCart();
+      renderCartBadge();
+      toast('🛒', 'Added item to your cart!');
+    }
+
+    function saveCart() { localStorage.setItem('ip_cart', JSON.stringify(cart)); }
+    
+    function loadCart() { 
+      const stored = localStorage.getItem('ip_cart'); 
+      if (stored) { try { cart = JSON.parse(stored); } catch (e) { cart = []; } } 
+      renderCartBadge(); 
+    }
+
+    function renderCartBadge() {
+      const b = document.getElementById('cartBadge');
+      if(!b) return;
+      const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+      if (totalItems > 0) { b.textContent = totalItems; b.classList.remove('hidden'); b.classList.add('flex'); }
+      else { b.classList.add('hidden'); }
+    }
+
+    function getTotal() {
+      return cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    }
+
+    function openCart() {
+      const wrap = document.getElementById('cartItems');
+      wrap.innerHTML = '';
+      let total = getTotal();
+
+      if (cart.length === 0) {
+        wrap.innerHTML =`<div class="text-center py-12 text-gray-600"><div class="text-5xl mb-3">🛒</div><p class="font-semibold">Cart is empty</p></div>`;
+        document.getElementById('cartTotal').textContent = 'Rs. 0';
+        showM('cartModal');
+        return;
+      }
+
+      cart.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-3 bg-iron-900 p-3 rounded-xl border border-gray-800/40';
+        row.innerHTML = `
+          <div class="w-12 h-12 rounded bg-gray-800 flex-shrink-0 flex items-center justify-center text-xl overflow-hidden">🏋️‍♂️</div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-white text-xs font-bold tracking-wide truncate">${item.name}</h4>
+            <p class="text-red-500 text-xs mt-0.5 font-semibold">Rs. ${item.price.toLocaleString()}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="changeQty('${item.id}', -1)" class="w-6 h-6 rounded bg-gray-800 text-gray-400 text-xs font-bold hover:text-white">-</button>
+            <span class="text-white text-xs font-bold w-4 text-center">${item.qty}</span>
+            <button onclick="changeQty('${item.id}', 1)" class="w-6 h-6 rounded bg-gray-800 text-gray-400 text-xs font-bold hover:text-white">+</button>
+          </div>
+        `;
+        wrap.appendChild(row);
+      });
+
+      document.getElementById('cartTotal').textContent = `Rs. ${total.toLocaleString()}`;
+      showM('cartModal');
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) { cart = cart.filter(i => i.id !== id); }
+      saveCart();
+      renderCartBadge();
+      openCart();
+    }
+
+    // NEW & FIXED: PROCEED TO CHECKOUT TRIGGER
+    // ─── FIXED: PROCEED TO CHECKOUT TRIGGER ──────────────────────────
+function openCheckout() {
+  if (!cart || cart.length === 0) {
+    toast('⚠️', 'Cart is empty!');
+    return;
+  }
+  
+  closeM('cartModal');
+  
+  const coNameEl = document.getElementById('coName');
+  const coPhoneEl = document.getElementById('coPhone');
+  const coCityEl = document.getElementById('coCity');
+  const coAddressEl = document.getElementById('coAddress');
+  
+  // FIXED: Safety check lagaya hai taake 'currentUser' undefined hone par code crash na kare
+  if (typeof currentUser !== 'undefined' && currentUser) {
+    if (coNameEl) coNameEl.value = (currentUser.name || '').trim();
+    if (coPhoneEl) coPhoneEl.value = currentUser.phone || '';
+    if (coCityEl) coCityEl.value = currentUser.city || '';
+  } else {
+    if (coNameEl) coNameEl.value = '';
+    if (coPhoneEl) coPhoneEl.value = '';
+    if (coCityEl) coCityEl.value = '';
+    if (coAddressEl) coAddressEl.value = '';
+  }
+  
+  const totalAmount = getTotal();
+  const coSubEl = document.getElementById('coSub');
+  const coTotalEl = document.getElementById('coTotal');
+  
+  if (coSubEl) coSubEl.textContent = 'Rs. ' + totalAmount.toLocaleString();
+  if (coTotalEl) coTotalEl.textContent = 'Rs. ' + totalAmount.toLocaleString();
+  
+  showM('checkoutModal');
+}
+    function switchPayment(type) {
+      const bSec = document.getElementById('bankSection');
+      const lCOD = document.getElementById('lblCOD');
+      const lBank = document.getElementById('lblBank');
+      if(!bSec || !lCOD || !lBank) return;
+
+      if (type === 'bank') {
+        bSec.classList.remove('hidden');
+        lBank.className = "flex items-center gap-3 p-3.5 rounded-xl border border-red-600 cursor-pointer transition-all bg-red-950/10";
+        lCOD.className = "flex items-center gap-3 p-3.5 rounded-xl border border-gray-700 cursor-pointer transition-all hover:border-gray-500";
+        renderBankDropdownList();
+      } else {
+        bSec.classList.add('hidden');
+        lCOD.className = "flex items-center gap-3 p-3.5 rounded-xl border border-red-600 cursor-pointer transition-all bg-red-950/10";
+        lBank.className = "flex items-center gap-3 p-3.5 rounded-xl border border-gray-700 cursor-pointer transition-all hover:border-gray-500";
+      }
+    }
+
+    
+    function selectBankOption(bank) {
+      selectedBank = bank;
+      
+      // 1. Search input field mein bank ka naam set karein
+      const bankSearchInput = document.getElementById('bankSearch');
+      if (bankSearchInput) {
+        bankSearchInput.value = bank.name;
+      }
+      
+      // 2. Nichay display hone wale text elements ko update karein (Baghair Icon Ke)
+      if (document.getElementById('selBankName')) {
+        document.getElementById('selBankName').textContent = bank.name;
+      }
+      if (document.getElementById('selBankInfo')) {
+        document.getElementById('selBankInfo').textContent = bank.info || '';
+      }
+      
+      // 3. Agar aapke HTML mein 'selBankIcon' abhi bhi maujood hai, toh use khali ya static emoji de dein
+      if (document.getElementById('selBankIcon')) {
+        document.getElementById('selBankIcon').textContent = '🏦'; // Ya isko blank '' kar dein
+      }
+      
+      // 4. Selected Bank Display Box ko show karein
+      const displayPanel = document.getElementById('selectedBankDisplay');
+      if (displayPanel) {
+        displayPanel.classList.remove('hidden');
+      }
+      
+      // 5. FINAL FIX: Dropdown list ko instantly close (hidden) kar dein
+      const dd = document.getElementById('bankDropdown');
+      if (dd) {
+        dd.classList.add('hidden');
+      }
+    }
+  
+    // 1. UPDATED: Dropdown list render karne wala function
+    function renderBankDropdownList() {
+      const drop = document.getElementById('bankDropdown');
+      if(!drop) return;
+      drop.innerHTML = '';
+      const query = (document.getElementById('bankSearch').value || '').toLowerCase();
+      const filtered = PACK_BANKS.filter(b => b.name.toLowerCase().includes(query));
+
+      if (filtered.length === 0) {
+        drop.innerHTML = `<div class="p-3 text-xs text-gray-600 text-center">No banks found</div>`;
+        return;
+      }
+      filtered.forEach(b => {
+        const opt = document.createElement('div');
+        opt.className = 'bank-opt p-2.5 hover:bg-gray-800 cursor-pointer flex items-center gap-2 text-white text-sm transition-colors';
+        
+        // FIX: Yahan se icon wala span tag remove kar diya ha
+        opt.innerHTML = `<span class="font-semibold">${b.name}</span>`;
+        
+        opt.onmousedown = () => selectBankOption(b);
+        drop.appendChild(opt);
+      });
+    }
+    // 2. UPDATED: Bank select karne ka final unified logic
+    function selectBank(bankName) {
+      // Input field mein bank name set karein
+      const bankSearchInput = document.getElementById('bankSearch');
+      if (bankSearchInput) {
+        bankSearchInput.value = bankName;
+      }
+      
+      // Kuch extra UI display blocks agar update karne hon to unke liye safety object check:
+      const bankObj = PACK_BANKS.find(b => b.name === bankName);
+      if (bankObj) {
+        selectedBank = bankObj;
+        if(document.getElementById('selBankIcon')) document.getElementById('selBankIcon').textContent = bankObj.icon;
+        if(document.getElementById('selBankName')) document.getElementById('selBankName').textContent = bankObj.name;
+        if(document.getElementById('selBankInfo')) document.getElementById('selBankInfo').textContent = bankObj.info;
+        if(document.getElementById('selectedBankDisplay')) document.getElementById('selectedBankDisplay').classList.remove('hidden');
+      }
+      
+      // Dropdown menu ko band karein
+      const dropdown = document.getElementById('bankDropdown');
+      if (dropdown) {
+        dropdown.classList.add('hidden');
+      }
+    }
+
+    // 3. UPDATED: Show Dropdown Function
+    function showBankDrop(){
+      renderBankDropdownList();
+      const dd = document.getElementById('bankDropdown');
+      if(dd) dd.classList.remove('hidden');
+    }
+    
+    // 4. UPDATED: Hide Dropdown Function (Click conflict se bachne ke liye delay fix kiya)
+    function hideBankDrop(){
+      setTimeout(() => {
+        const dd = document.getElementById('bankDropdown');
+        if(dd) dd.classList.add('hidden');
+      }, 200);
+    }
+   
+
+  
+
+    function openSidebar() { document.getElementById('sidebar').classList.remove('-translate-x-full'); const ov = document.getElementById('sidebarOverlay'); ov.classList.remove('hidden'); setTimeout(() => ov.style.opacity = '1', 10); document.body.style.overflow = 'hidden'; }
+    function closeSidebar() { document.getElementById('sidebar').classList.add('-translate-x-full'); const ov = document.getElementById('sidebarOverlay'); ov.style.opacity = '0'; setTimeout(() => { ov.classList.add('hidden') }, 300); document.body.style.overflow = ''; }
+
+    let toastTmr;
+    function toast(icon, msg) { document.getElementById('toastIcon').textContent = icon; document.getElementById('toastMsg').textContent = msg; const t = document.getElementById('toast'); t.classList.add('show'); clearTimeout(toastTmr); toastTmr = setTimeout(() => t.classList.remove('show'), 3000); }
+    function initReveal() { const obs = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: .1 }); document.querySelectorAll('.reveal').forEach(el => obs.observe(el)); }
+  
+    function toggleSearch() {
+      const sb = document.getElementById('searchBar');
+      sb.classList.toggle('hidden');
+      if (!sb.classList.contains('hidden')) {
+        document.getElementById('searchInput').focus();
+      }
+    }
+
+    function toggleMobile() {
+      const mm = document.getElementById('mobileMenu');
+      if(mm) mm.classList.toggle('open');
+    }
+
+    function applyFiltersFromNav() {
+      const navQuery = document.getElementById('searchInput').value;
+      const deskSearch = document.getElementById('searchDesk');
+      const mobSearch = document.getElementById('searchMob');
+      
+      if (deskSearch) deskSearch.value = navQuery;
+      if (mobSearch) mobSearch.value = navQuery;
+      
+      renderProducts();
+    }
+
+    // ─── PLACE ORDER TRIGGER ─────────────────────────────────────
+    function placeOrder() {
+      // 1. Basic Form Validations Check
+      const name = document.getElementById('coName').value.trim();
+      const phone = document.getElementById('coPhone').value.trim();
+      const address = document.getElementById('coAddress').value.trim();
+      const city = document.getElementById('coCity').value.trim();
+
+      if (!name || !phone || !address || !city) {
+        toast('Please fill in all required fields!');
+        return;
+      }
+
+      // 2. Bank Details Verification Check (Agar bank select kiya ho)
+      const payMethod = document.querySelector('input[name="pay"]:checked').value;
+      if (payMethod === 'bank') {
+        const bName = document.getElementById('bankSearch').value.trim();
+        const bAcc = document.getElementById('bankAccNum').value.trim();
+        const bHolder = document.getElementById('bankAccName').value.trim();
+
+        if (!bName || !bAcc || !bHolder) {
+          toast('Please fill in all Bank Transfer details!');
+          return;
+        }
+      }
+
+      // 3. Generate Random Order ID
+      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+      const orderDate = new Date().toLocaleDateString('en-PK');
+      const orderPaymentText = payMethod === 'bank'
+        ? (document.getElementById('bankSearch')?.value.trim() || 'Bank Transfer') + ' (Bank Transfer)'
+        : 'Cash on Delivery';
+
+      // Order object banayein
+      const order = {
+        id: orderId,
+        date: orderDate,
+        items: [...cart],
+        total: getTotal(),
+        name, phone, address, city,
+        payment: orderPaymentText,
+        status: 'Confirmed'
+      };
+
+      // Order ko logged-in user ke profile (Order History) mein save karein
+      if (currentUser) {
+        if (!currentUser.orders) currentUser.orders = [];
+        currentUser.orders.unshift(order);
+        localStorage.setItem('ip_user', JSON.stringify(currentUser));
+
+        // ip_users_db (sab registered users ki DB) mein bhi sync karein
+        let allUsers = JSON.parse(localStorage.getItem('ip_users_db') || '[]');
+        const idx = allUsers.findIndex(u => u.email === currentUser.email);
+        if (idx !== -1) {
+          allUsers[idx] = currentUser;
+          localStorage.setItem('ip_users_db', JSON.stringify(allUsers));
+        }
+      } else {
+        // Guest checkout (login nahi kiya) — sirf local history mein save karein
+        const localOrders = JSON.parse(localStorage.getItem('ip_local_orders') || '[]');
+        localOrders.unshift(order);
+        localStorage.setItem('ip_local_orders', JSON.stringify(localOrders));
+      }
+
+      // Success Modal ke UI Elements ko update karein
+      const ordIdBox = document.getElementById('ordIdBox');
+      if (ordIdBox) ordIdBox.textContent = `Order ID: ${orderId}`;
+
+      const bankReminder = document.getElementById('bankReminder');
+      if (bankReminder) {
+        if (payMethod === 'bank') {
+          bankReminder.classList.remove('hidden');
+        } else {
+          bankReminder.classList.add('hidden');
+        }
+      }
+
+      // 4. Modals Toggle Actions
+      closeM('checkoutModal');
+      showM('successModal');
+
+      // 5. Cart aur form clear karein
+      clearCartAfterOrder();
+    }
+
+    // ─── CLEAR CART AFTER ORDER SUCCESS ──────────────────────────
+   // ─── CLEAR CART & CHECKOUT FORM AFTER ORDER SUCCESS ──────────────────────────
+    function clearCartAfterOrder() {
+      // 1. Cart Array ko khali karein aur state reset karein
+      cart = []; 
+      saveCart(); 
+      renderCartBadge(); 
+
+      // 2. Delivery Info Fields ko clear karein
+      if (document.getElementById('coName')) document.getElementById('coName').value = '';
+      if (document.getElementById('coPhone')) document.getElementById('coPhone').value = '';
+      if (document.getElementById('coAddress')) document.getElementById('coAddress').value = '';
+      if (document.getElementById('coCity')) document.getElementById('coCity').value = '';
+
+      // 3. Bank Transfer Details Inputs ko clear karein
+      if (document.getElementById('bankSearch')) document.getElementById('bankSearch').value = '';
+      if (document.getElementById('bankAccNum')) document.getElementById('bankAccNum').value = '';
+      if (document.getElementById('bankAccName')) document.getElementById('bankAccName').value = '';
+
+      // 4. Temporary Selected Bank Display Panel ko hide aur clear karein
+      selectedBank = null;
+      const bankDisplay = document.getElementById('selectedBankDisplay');
+      if (bankDisplay) {
+        bankDisplay.classList.add('hidden');
+      }
+
+      // 5. Payment method radio button ko wapas default 'cod' par switch karein
+      const codRadio = document.querySelector('input[name="pay"][value="cod"]');
+      if (codRadio) {
+        codRadio.checked = true;
+        switchPayment('cod'); // Isse bankSection automatic hide ho jayega
+      }
+
+      // 6. Success Toast Alert show karein
+      toast('Thank you for shopping with us! Order data reset.');
+    }
+
+    // ─── BANK LIVE SEARCH INPUT FIX ──────────────────────────────
+    // HTML input par filterBanks() call ho raha hai, usko mapping di hai:
+    function filterBanks() {
+      renderBankDropdownList();
+    }
+
+   
+</script>
+</body>
+
+</html>

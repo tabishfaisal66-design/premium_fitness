@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -327,8 +326,9 @@
   display: none;
 }
 
-/* Screen size larger than 473px */
-@media (min-width: 474px) {
+
+/* Screen size larger than 499px — navbar shows profile/auth */
+@media (min-width: 500px) {
   .custom-auth-btns, .custom-user-menu {
     display: flex;
   }
@@ -345,12 +345,20 @@
 }
 
 /* Critical Fix for smaller screens to hide header auth row */
-@media (max-width: 473px) {
+/* Critical Fix for smaller screens to hide header auth row */
+@media (max-width: 499px) {
   .custom-auth-btns, .custom-user-menu {
     display: none !important;
   }
   .custom-hamburger {
     display: block !important;
+  }
+}
+
+/* Hamburger's own profile/auth section — sirf 499px aur usse neeche */
+@media (min-width: 500px) {
+  .mobile-auth-wrap {
+    display: none !important;
   }
 }
     
@@ -414,18 +422,31 @@
       <input id="searchInput" oninput="applyFiltersFromNav()" type="text" placeholder="Search supplements, accessories..." class="input-field w-full px-4 py-2.5 rounded-lg text-sm">
     </div>
     
-    <div id="mobileMenu" class="custom-mobile-menu">
-      <div class="py-4 space-y-3 text-sm font-semibold uppercase tracking-wider text-gray-400 border-t border-gray-800">
-        <a href="index.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Home</a>
-        <a href="shop.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Supplements</a>
-        <a href="accessories.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Accessories</a>
-        <div class="flex gap-3 pt-2">
-          <button onclick="showModal('loginModal');toggleMobile()" class="flex-1 text-center py-2 rounded border border-gray-700 text-gray-400">Login</button>
-          <button onclick="showModal('signupModal');toggleMobile()" class="flex-1 btn-fire text-white py-2 rounded font-semibold">Sign Up</button>
-        </div>
+  <div id="mobileMenu" class="custom-mobile-menu">
+  <div class="py-4 space-y-3 text-sm font-semibold uppercase tracking-wider text-gray-400 border-t border-gray-800">
+    <a href="index.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Home</a>
+    <a href="shop.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Supplements</a>
+    <a href="accessories.html" onclick="toggleMobile()" class="block py-1 hover:text-fire transition-colors">Accessories</a>
+
+    <!-- Ye wrapper sirf <500px par dikhega -->
+    <div id="mobileAuthWrap" class="mobile-auth-wrap">
+      <!-- Guest buttons -->
+      <div id="mobileAuthBtns" class="flex gap-3 pt-2">
+        <a href="login.html" class="flex-1 text-center py-2 rounded border border-gray-700 text-gray-400">Login</a>
+        <a href="signup.html" class="flex-1 btn-fire text-center text-white py-2 rounded font-semibold">Sign Up</a>
+      </div>
+
+      <!-- Logged in buttons -->
+      <div id="mobileUserMenu" class="hidden flex flex-col gap-2 pt-2">
+        <button onclick="showProfile();toggleMobile()" class="flex items-center gap-2 py-2 text-gray-300 hover:text-fire transition-colors">
+          <div class="w-7 h-7 bg-fire rounded-full flex items-center justify-center font-bebas text-sm text-white" id="avatarInitialMob">U</div>
+          <span id="userNameNavMob" class="normal-case font-semibold">User</span>
+        </button>
+        <button onclick="logout();toggleMobile()" class="text-left py-2 rounded border border-gray-700 text-gray-400 hover:text-fire transition-colors px-3">Logout</button>
       </div>
     </div>
   </div>
+</div>
 </nav>
   <!-- TICKER -->
   <div class="ticker-wrap mt-16 py-2">
@@ -460,8 +481,8 @@
           Premium imported supplements & professional gym accessories. 100% authentic. Delivered across Pakistan.
         </p>
         <div class="flex flex-wrap gap-4 animate-fade-up" style="animation-delay:0.3s">
-          <a href="#products"
-            class="btn-fire text-white font-bold px-8 py-4 rounded-lg text-lg uppercase tracking-wider">Shop Now →</a>
+          <a href="signup.html"
+            class="btn-fire text-white font-bold px-8 py-4 rounded-lg text-lg uppercase tracking-wider">Join Now →</a>
           <a href="#about"
             class="px-8 py-4 rounded-lg text-lg font-bold uppercase tracking-wider text-white border border-gray-700 hover:border-fire transition-colors">Learn
             More</a>
@@ -1399,22 +1420,33 @@
     function loginUser(user) { currentUser = user; localStorage.setItem('ip_user', JSON.stringify(user)); updateAuthUI(); }
     function logout() { currentUser = null; localStorage.removeItem('ip_user'); updateAuthUI(); showToast('👋', 'Logged out.'); }
     
-    function updateAuthUI() {
-      const ab = document.getElementById('authBtns'), um = document.getElementById('userMenu');
-      if (currentUser) {
-        if(ab) ab.classList.add('hidden'); 
-        if(um) um.classList.remove('hidden');
-        const initial = (currentUser.name || 'User')[0].toUpperCase();
-        const avatarEl = document.getElementById('avatarInitial');
-        const nameNavEl = document.getElementById('userNameNav');
-        if(avatarEl) avatarEl.textContent = initial;
-        if(nameNavEl) nameNavEl.textContent = currentUser.name.split(' ')[0];
-      } else { 
-        if(ab) ab.classList.remove('hidden'); 
-        if(um) um.classList.add('hidden'); 
-      }
-    }
+function updateAuthUI() {
+  const ab = document.getElementById('authBtns'), um = document.getElementById('userMenu');
+  const mab = document.getElementById('mobileAuthBtns'), mum = document.getElementById('mobileUserMenu');
 
+  if (currentUser) {
+    if(ab) ab.classList.add('hidden'); 
+    if(um) um.classList.remove('hidden');
+    if(mab) mab.classList.add('hidden');
+    if(mum) mum.classList.remove('hidden');
+
+    const initial = (currentUser.name || 'User')[0].toUpperCase();
+    const avatarEl = document.getElementById('avatarInitial');
+    const nameNavEl = document.getElementById('userNameNav');
+    if(avatarEl) avatarEl.textContent = initial;
+    if(nameNavEl) nameNavEl.textContent = currentUser.name.split(' ')[0];
+
+    const avatarElMob = document.getElementById('avatarInitialMob');
+    const nameNavElMob = document.getElementById('userNameNavMob');
+    if(avatarElMob) avatarElMob.textContent = initial;
+    if(nameNavElMob) nameNavElMob.textContent = currentUser.name.split(' ')[0];
+  } else { 
+    if(ab) ab.classList.remove('hidden'); 
+    if(um) um.classList.add('hidden'); 
+    if(mab) mab.classList.remove('hidden');
+    if(mum) mum.classList.add('hidden');
+  }
+}
     function showProfile() {
       if (!currentUser) return;
       const initial = (currentUser.name || 'User')[0].toUpperCase();
@@ -1511,6 +1543,3 @@
 
 
 </html>
-
-
-
